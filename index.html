@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Piggy Party">
-    <title>Pass the Pigs: Rodeo App</title>
+    <title>Pass the Pigs: Rodeo Edition</title>
     
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -23,8 +23,17 @@
         .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; }
         .hidden { display: none !important; }
 
+        /* Fixed Full-Size Logo Style */
         #home-screen { text-align: center; }
-        .logo-img { width: 240px; height: 240px; border-radius: 50px; border: 8px solid var(--piggy-pink); margin-bottom: 15px; box-shadow: 0 8px 0 rgba(0,0,0,0.1); }
+        .logo-img { 
+            width: 280px; height: 280px; 
+            border-radius: 60px; 
+            border: 8px solid var(--piggy-pink); 
+            margin-bottom: 20px; 
+            box-shadow: 0 8px 0 rgba(0,0,0,0.1); 
+            object-fit: cover; /* Ensures the pig fills the frame */
+            background-color: white; /* Replaces checkered background */
+        }
         
         .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One'; }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
@@ -59,7 +68,7 @@
 
     <div id="home-screen">
         <img src="icon.png" alt="Logo" class="logo-img">
-        <h1 style="font-family:'Fredoka One'; font-size: 2.8rem; margin-bottom: 5px;">Piggy Party</h1>
+        <h1 style="font-family:'Fredoka One'; font-size: 3rem; margin-bottom: 5px;">Piggy Party</h1>
         <p style="font-weight: 700; margin-bottom: 25px; color: var(--deep-pink);">Rodeo Edition</p>
         <button class="btn-lets-roll" onclick="showSetup()">Start Game</button>
     </div>
@@ -116,34 +125,18 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
-
         if (type === 'click') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(600, now);
-            osc.frequency.exponentialRampToValueAtTime(10, now + 0.05);
-            gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(10, now + 0.05);
+            gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
             osc.start(now); osc.stop(now + 0.05);
         } else if (type === 'snort') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(80, now);
-            osc.frequency.linearRampToValueAtTime(40, now + 0.2);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(80, now); osc.frequency.linearRampToValueAtTime(40, now + 0.2);
+            gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
             osc.start(now); osc.stop(now + 0.2);
         } else if (type === 'oink') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(200, now);
-            osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            osc.frequency.exponentialRampToValueAtTime(200, now + 0.2);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
             osc.start(now); osc.stop(now + 0.3);
-        } else if (type === 'win') {
-            const osc2 = audioCtx.createOscillator();
-            osc.frequency.setValueAtTime(523, now); osc2.frequency.setValueAtTime(659, now);
-            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-            osc.start(now); osc2.start(now); osc.stop(now + 0.5); osc2.stop(now + 0.5);
         }
     }
 
@@ -156,9 +149,9 @@
 
     function cycleAudioMode() { if (!audioCtx) initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
 
-    function showSetup() { if (!audioCtx) initAudio(); synthSfx('click'); document.getElementById('home-screen').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); drawSetup(); }
-    
-    // ... REST OF YOUR GAME LOGIC (initGame, handleRoll, etc) using synthSfx('click'), synthSfx('snort'), etc.
-</script>
-</body>
-</html>
+    function showSetup() { 
+        if (!audioCtx) initAudio(); 
+        synthSfx('click'); 
+        document.getElementById('home-screen').classList.add('hidden'); 
+        document.getElementById('setup').classList.remove('hidden'); 
+        drawSetup(); // Fixed
