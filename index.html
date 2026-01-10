@@ -21,81 +21,41 @@
         }
         body { 
             font-family: 'Quicksand', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            color: var(--mud-brown); 
-            -webkit-user-select: none; 
-            user-select: none; 
-            touch-action: manipulation;
+            margin: 0; padding: 0; color: var(--mud-brown); 
+            -webkit-user-select: none; user-select: none; touch-action: manipulation;
             background: url('background2.png') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100dvh;
+            background-size: cover; min-height: 100dvh;
         }
         
         #home-screen { 
             background: url('background.png') no-repeat center center; 
-            background-size: cover;
-            height: 100dvh;
-            width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding-bottom: 60px;
-            box-sizing: border-box;
-            z-index: 5000;
+            background-size: cover; height: 100dvh; width: 100vw;
+            position: fixed; top: 0; left: 0; display: flex;
+            flex-direction: column; justify-content: flex-end;
+            padding-bottom: 60px; box-sizing: border-box; z-index: 5000;
         }
 
         .container { 
-            max-width: 450px; 
-            margin: 20px auto; 
-            background: rgba(255, 255, 255, 0.3); 
-            padding: 25px; 
-            border-radius: 40px; 
-            border: 2px solid var(--piggy-pink); 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
-            position: relative; 
-            min-height: 80vh; 
-            z-index: 10;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            max-width: 450px; margin: 20px auto; 
+            background: rgba(255, 255, 255, 0.3); padding: 25px; 
+            border-radius: 40px; border: 2px solid var(--piggy-pink); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); position: relative; 
+            min-height: 80vh; z-index: 10;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
 
         .hidden { display: none !important; }
-        
-        .audio-toggle { 
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            background: var(--white); 
-            border: 3px solid var(--piggy-pink); 
-            border-radius: 20px; 
-            padding: 5px 10px; 
-            cursor: pointer; 
-            z-index: 6000; 
-            font-family: 'Fredoka One'; 
-            box-shadow: 0 4px 0 var(--pink-shadow);
-        }
+        .audio-toggle { position: fixed; top: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; z-index: 6000; font-family: 'Fredoka One'; box-shadow: 0 4px 0 var(--pink-shadow); }
 
-        .btn-start-container { width: 100%; padding: 0 30px; box-sizing: border-box; }
-        .name-entry { padding: 15px; background: rgba(255, 255, 255, 0.8); border-radius: 25px; border: 3px solid var(--piggy-pink); margin-bottom: 15px; }
-        
-        /* Character Swiper Styles */
+        /* Character Styles */
         .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
         .char-opt { width: 50px; height: 50px; cursor: pointer; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; object-fit: cover; }
         .char-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
-        
-        /* Game Board Icons */
         .score-char-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--piggy-pink); }
         .active-char-img { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; border: 4px solid var(--piggy-pink); margin-bottom: 10px; }
 
-        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; }
         .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
-        .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
-        .score-card { background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
-        .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
+        .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 15px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; box-shadow: 0 6px 0 var(--mud-shadow); font-size: 1.1rem; margin-bottom: 15px; }
         
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button.roll-btn { padding: 16px 5px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.85rem; position: relative; }
@@ -104,7 +64,11 @@
         .btn-risk { background: #ff7096; color: var(--white); box-shadow: 0 6px 0 #c9184a; }
         .btn-oink { grid-column: span 2; background: #e63946; color: white; box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
         .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 20px; font-size: 1.3rem; box-shadow: 0 8px 0 #588157; margin-top: 10px; border-radius: 25px; }
-        .turn-bank { font-family: 'Fredoka One'; font-size: 4.5rem; color: var(--piggy-pink); text-shadow: 3px 3px var(--mud-brown); line-height: 1; text-align: center; margin: 10px 0; }
+        
+        .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
+        .score-card { background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
+        .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
+        .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -121,8 +85,7 @@
 
     <div class="container hidden" id="main-container">
         <div id="setup">
-            <h2 style="text-align:center; font-family:'Fredoka One'; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">🐷 Player Setup</h2>
-            <p style="text-align:center; font-weight:bold; color: var(--white); text-shadow: 1px 1px var(--mud-brown);">How many piggies?</p>
+            <h2 style="text-align:center; font-family:'Fredoka One'; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Player Setup</h2>
             <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:80px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink); font-size: 1.2rem;">
             <div id="nameFields" style="margin-top:20px"></div>
             <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
@@ -130,10 +93,13 @@
 
         <div id="game" class="hidden">
             <div class="scoreboard" id="sb"></div>
+            <button class="btn-hog-main" onclick="openHogCall()">📢 HOG CALL!</button>
+            <div id="hogIndicator" style="text-align:center; color:var(--white); font-weight:bold; min-height:1.2em; margin-bottom:10px; text-shadow: 1px 1px var(--hog-mud);"></div>
+            
             <div class="turn-area" style="text-align:center;">
                 <div id="activeImgContainer"></div>
                 <h3 id="activeTitle" style="margin:5px 0; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Turn</h3>
-                <div class="turn-bank" id="bank">0</div>
+                <div class="turn-bank" id="bank" style="font-family:'Fredoka One'; font-size:4.5rem; color:var(--piggy-pink); text-shadow:3px 3px var(--mud-brown);">0</div>
             </div>
             <div class="button-grid">
                 <button class="roll-btn btn-pts" onclick="handleRoll(1, 'Sider')">Sider (1)</button>
@@ -149,6 +115,19 @@
                 <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
             </div>
         </div>
+
+        <div id="hogModal" class="custom-modal hidden">
+            <h2 style="color:var(--hog-mud); font-family:'Fredoka One';">📢 HOG CALL!</h2>
+            <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0;"></div>
+            <div class="button-grid" id="hogGuessGrid"></div>
+            <button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button>
+        </div>
+
+        <div id="hogResultModal" class="custom-modal hidden">
+            <h2 id="resultHeader" style="color:var(--deep-pink); font-family:'Fredoka One';">Result</h2>
+            <div id="resultContent" style="font-size:1.2rem; margin:20px 0; font-weight:700;"></div>
+            <button class="btn-lets-roll" onclick="closeResultModal()">Back to Game</button>
+        </div>
     </div>
 
 <script>
@@ -157,10 +136,10 @@
     let audioCtx = null;
     let bgMusic = null;
 
-    // Loading character images 1-10
     const characterImages = Array.from({length: 10}, (_, i) => `character${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
-    let players = [], curIdx = 0, bank = 0;
+    const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'Double Trotter',v:20},{n:'Double Snouter',v:40},{n:'Double Jowler',v:60}];
+    let players = [], curIdx = 0, bank = 0, activeHog = null;
 
     function initAudio() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -238,7 +217,26 @@
         refresh(); 
     }
 
-    function handleRoll(v, name) { if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; nextTurn(); return; } synthSfx('click'); bank += v; refresh(); }
+    function handleRoll(v, name) { 
+        if(name === 'PIG OUT') { 
+            synthSfx('snort'); bank = 0; activeHog = null; nextTurn(); return; 
+        } 
+        synthSfx('click'); 
+        let gain = v;
+        if(activeHog) {
+            const doubleVal = activeHog.val * 2;
+            if(name === activeHog.guess) {
+                players[activeHog.caller].score += doubleVal; gain -= doubleVal;
+                showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${doubleVal} pts!`);
+            } else {
+                players[activeHog.caller].score -= doubleVal; gain += doubleVal;
+                showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${doubleVal} pts!`);
+            }
+            activeHog = null; document.getElementById('hogIndicator').innerText = '';
+        }
+        bank += gain; refresh(); 
+    }
+
     function saveTurn() { synthSfx('click'); players[curIdx].score += bank; bank = 0; nextTurn(); }
     function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
     
@@ -254,6 +252,43 @@
             sb.appendChild(card); 
         });
     }
+
+    function openHogCall() {
+        synthSfx('click');
+        const pList = document.getElementById('hogPlayerSelect');
+        pList.innerHTML = ''; let eligible = 0;
+        players.forEach((p, i) => {
+            if(i !== curIdx && p.score >= 20) {
+                pList.innerHTML += `<div class="score-card" id="hpc${i}" onclick="selectHogP(${i})"><div style="font-size:0.6rem;">${p.name}</div><img src="${p.img}" class="score-char-img"></div>`;
+                eligible++;
+            }
+        });
+        if(eligible === 0) return alert("No one else has 20 points yet!");
+        const gList = document.getElementById('hogGuessGrid');
+        gList.innerHTML = '';
+        poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`);
+        document.getElementById('hogModal').classList.remove('hidden');
+        activeHog = { caller: null, guess: null, val: 0 };
+    }
+
+    function selectHogP(idx) {
+        synthSfx('click');
+        document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card'));
+        document.getElementById('hpc' + idx).classList.add('active-card');
+        activeHog.caller = idx;
+    }
+
+    function setHogGuess(name, val) {
+        if(activeHog.caller === null) return alert("Select challenger!");
+        synthSfx('click');
+        activeHog.guess = name; activeHog.val = val;
+        document.getElementById('hogModal').classList.add('hidden');
+        document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`;
+    }
+
+    function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); refresh(); }
+    function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
+    function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
     function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } }
 </script>
 </body>
