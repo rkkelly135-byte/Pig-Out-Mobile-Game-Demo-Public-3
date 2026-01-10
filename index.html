@@ -49,39 +49,37 @@
 
         .stepper-container { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px 0; }
         .step-btn { background: var(--piggy-pink); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-family: 'Fredoka One'; cursor: pointer; box-shadow: 0 4px 0 var(--pink-shadow); }
-        .step-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--pink-shadow); }
         .player-count-display { font-family: 'Fredoka One'; font-size: 3rem; color: var(--deep-pink); text-shadow: 2px 2px var(--white); min-width: 60px; text-align: center; }
 
-        .name-entry { padding: 20px; background: rgba(255, 255, 255, 0.85); border-radius: 30px; border: 3px solid var(--piggy-pink); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        
+        .name-entry { padding: 20px; background: rgba(255, 255, 255, 0.85); border-radius: 30px; border: 3px solid var(--piggy-pink); margin-bottom: 25px; }
         .emoji-swiper { display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 15px; }
-        .char-opt { width: 85px; height: 85px; cursor: pointer; border-bottom: 5px solid transparent; flex-shrink: 0; object-fit: contain; transition: 0.2s; }
+        .char-opt { width: 85px; height: 85px; cursor: pointer; border-bottom: 5px solid transparent; flex-shrink: 0; object-fit: contain; }
         .char-opt.selected { border-color: var(--deep-pink); transform: scale(1.1); }
         
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; }
+        
+        /* UPDATED: ZERO SPACING SCORECARD */
         .score-card { 
             background: rgba(255, 255, 255, 0.95); 
-            padding: 8px; 
-            border-radius: 20px; 
+            padding: 5px; 
+            border-radius: 15px; 
             min-width: 80px; 
-            height: 100px; 
+            height: 95px; 
             text-align: center; 
             border: 4px solid var(--piggy-pink); 
             flex-shrink: 0; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: space-between; 
-            gap: 2px; 
-            overflow: hidden; /* Necessary for the crop effect */
+            justify-content: center;
+            overflow: hidden;
         }
-        
-        /* UPDATED: Zoomed 10% and edge-cropping scoreboard images */
+        .score-card div, .score-card img { margin: 0; padding: 0; line-height: 1; }
         .score-char-img { 
             width: 55px; 
             height: 55px; 
             object-fit: cover; 
-            transform: scale(1.1); 
+            transform: scale(1.15); /* 15% zoom for crop effect */
         } 
         
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.05); }
@@ -269,10 +267,28 @@
             }
             activeHog = null; document.getElementById('hogIndicator').innerText = '';
         }
-        bank += gain; refresh(); 
+        bank += gain; 
+        
+        // WIN CHECK ON ROLL (Standard Piggy Party Goal: 100)
+        if(players[curIdx].score + bank >= 100) { saveTurn(); } 
+        refresh(); 
     }
 
-    function saveTurn() { playSfx('save'); players[curIdx].score += bank; bank = 0; nextTurn(); }
+    function saveTurn() { 
+        playSfx('save'); 
+        players[curIdx].score += bank; 
+        
+        // WIN CHECK ON SAVE
+        if(players[curIdx].score >= 100) {
+            playSfx('yeehaw');
+            alert(`YEEHAW! ${players[curIdx].name} wins with ${players[curIdx].score} points!`);
+            location.reload();
+            return;
+        }
+        
+        bank = 0; nextTurn(); 
+    }
+    
     function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
     
     function refresh() {
@@ -315,14 +331,7 @@
     function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); refresh(); }
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
-    
-    // UPDATED: Instant Oinker without confirmation box
-    function oinker() { 
-        playSfx('oinker'); 
-        players[curIdx].score = 0; 
-        bank = 0; 
-        nextTurn(); 
-    }
+    function oinker() { playSfx('oinker'); players[curIdx].score = 0; bank = 0; nextTurn(); }
 </script>
 </body>
 </html>
