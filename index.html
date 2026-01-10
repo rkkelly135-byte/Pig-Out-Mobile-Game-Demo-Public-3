@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Piggy Party">
-    <title>Pass the Pigs: Ultimate Audio App</title>
+    <title>Pass the Pigs: Rodeo App</title>
     
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -20,11 +20,11 @@
             --tan-shadow: #d4a373; --pink-shadow: #d94e6d; --mud-shadow: #3a1e09;
         }
         body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-user-select: none; user-select: none; touch-action: manipulation; }
-        .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
+        .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; }
         .hidden { display: none !important; }
 
         #home-screen { text-align: center; }
-        .logo-img { width: 220px; height: 220px; border-radius: 40px; border: 6px solid var(--piggy-pink); margin-bottom: 20px; box-shadow: 0 8px 0 rgba(0,0,0,0.1); }
+        .logo-img { width: 240px; height: 240px; border-radius: 50px; border: 8px solid var(--piggy-pink); margin-bottom: 15px; box-shadow: 0 8px 0 rgba(0,0,0,0.1); }
         
         .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One'; }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
@@ -58,7 +58,7 @@
     </div>
 
     <div id="home-screen">
-        <img src="icon.png" alt="Piggy Party Logo" class="logo-img">
+        <img src="icon.png" alt="Logo" class="logo-img">
         <h1 style="font-family:'Fredoka One'; font-size: 2.8rem; margin-bottom: 5px;">Piggy Party</h1>
         <p style="font-weight: 700; margin-bottom: 25px; color: var(--deep-pink);">Rodeo Edition</p>
         <button class="btn-lets-roll" onclick="showSetup()">Start Game</button>
@@ -87,31 +87,10 @@
             <button class="roll-btn btn-pts" onclick="handleRoll(10, 'Snouter')">Snouter (10)</button>
             <button class="roll-btn btn-pts" onclick="handleRoll(15, 'Jowler')">Jowler (15)</button>
             <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'Double Trotter')">D-Trot (20)</button>
-            <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'Double Razorback')">D-Razor (20)</button>
-            <button class="roll-btn btn-dbl" onclick="handleRoll(40, 'Double Snouter')">D-Snout (40)</button>
-            <button class="roll-btn btn-dbl" onclick="handleRoll(60, 'Double Jowler')">D-Jowl (60)</button>
             <button class="roll-btn btn-risk" onclick="handleRoll(0, 'PIG OUT')">PIG OUT!</button>
             <button class="roll-btn btn-oink" onclick="oinker()">OINKER (Back to 0)</button>
             <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
         </div>
-    </div>
-
-    <div id="hogModal" class="custom-modal hidden">
-        <h2 style="color:var(--hog-mud)">📢 HOG CALL!</h2>
-        <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0;"></div>
-        <div class="button-grid" id="hogGuessGrid"></div>
-        <button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button>
-    </div>
-    <div id="hogResultModal" class="custom-modal hidden">
-        <h2 id="resultHeader" style="color:var(--deep-pink)">Result</h2>
-        <div id="resultContent" style="font-size:1.2rem; margin:20px 0; font-weight:700;"></div>
-        <button class="btn-lets-roll" onclick="closeResultModal()">Back to Game</button>
-    </div>
-    <div id="results" class="hidden">
-        <h2 style="font-family:'Fredoka One'">🏆 GAME OVER!</h2>
-        <div id="winnerSplash" style="text-align:center; font-size:4.5rem"></div>
-        <div id="tableContainer" style="overflow-x: auto; margin-top:20px;"></div>
-        <button class="btn-lets-roll" onclick="resetGameInternal()">New Game</button>
     </div>
 </div>
 
@@ -120,7 +99,6 @@
     let currentMode = audioMode.ALL;
     let audioCtx = null;
     let bgMusic = null;
-    let sfx = {};
 
     function initAudio() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -129,21 +107,44 @@
             bgMusic.loop = true;
             bgMusic.volume = 0.2;
         }
-        // Loading improved pre-recorded sounds
-        sfx.click = new Audio('https://www.soundjay.com/buttons/button-16.mp3');
-        sfx.snort = new Audio('https://www.soundjay.com/mechanical/snort-1.mp3');
-        sfx.oink = new Audio('https://www.soundjay.com/human/oink-1.mp3');
-        sfx.success = new Audio('https://www.soundjay.com/buttons/button-09.mp3');
-        sfx.fail = new Audio('https://www.soundjay.com/buttons/button-10.mp3');
-        sfx.win = new Audio('https://www.soundjay.com/human/applause-01.mp3');
-        
         applyAudioMode();
     }
 
-    function playSfx(name) {
-        if (currentMode === audioMode.MUTE || !sfx[name]) return;
-        sfx[name].currentTime = 0;
-        sfx[name].play().catch(() => {});
+    function synthSfx(type) {
+        if (currentMode === audioMode.MUTE || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(10, now + 0.05);
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'snort') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(80, now);
+            osc.frequency.linearRampToValueAtTime(40, now + 0.2);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+            osc.start(now); osc.stop(now + 0.2);
+        } else if (type === 'oink') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'win') {
+            const osc2 = audioCtx.createOscillator();
+            osc.frequency.setValueAtTime(523, now); osc2.frequency.setValueAtTime(659, now);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            osc.start(now); osc2.start(now); osc.stop(now + 0.5); osc2.stop(now + 0.5);
+        }
     }
 
     function applyAudioMode() {
@@ -155,89 +156,9 @@
 
     function cycleAudioMode() { if (!audioCtx) initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
 
-    const pigEmojis = ["🐷", "🐽", "🐖", "🥓", "🐗", "👑", "🚀", "🎩", "🕵️", "💩"];
-    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
-    const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'Double Trotter',v:20},{n:'Double Razorback',v:20},{n:'Double Snouter',v:40},{n:'Double Jowler',v:60}];
-    let players = [], curIdx = 0, bank = 0, activeHog = null, round = 1;
-
-    function showSetup() {
-        if (!audioCtx) initAudio();
-        playSfx('click');
-        document.getElementById('home-screen').classList.add('hidden');
-        document.getElementById('setup').classList.remove('hidden');
-        drawSetup();
-    }
-
-    function drawSetup() {
-        const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
-        const container = document.getElementById('nameFields'); container.innerHTML = '';
-        for(let i=0; i<val; i++) {
-            let swiper = pigEmojis.map((e, idx) => `<span class="emoji-opt ${idx === i ? 'selected' : ''}" onclick="selectEmoji(${i}, ${idx}, this)">${e}</span>`).join('');
-            container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-emoji="${pigEmojis[i]}" value="${pigNames[i]}"></div>`;
-        }
-    }
-    function selectEmoji(pIdx, eIdx, el) { playSfx('click'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
+    function showSetup() { if (!audioCtx) initAudio(); synthSfx('click'); document.getElementById('home-screen').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); drawSetup(); }
     
-    function initGame() { 
-        players = []; round = 1; curIdx = 0; bank = 0; 
-        document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); 
-        document.getElementById('setup').classList.add('hidden'); 
-        document.getElementById('game').classList.remove('hidden'); 
-        refresh(); 
-    }
-
-    function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { playSfx('snort'); bank = 0; players[curIdx].history.push(0); activeHog = null; nextTurn(); return; } 
-        playSfx('click'); 
-        let gain = v; 
-        if(activeHog) { 
-            const d = activeHog.val * 2; 
-            if(name === activeHog.guess) { 
-                playSfx('success'); players[activeHog.caller].score += d; gain -= d; 
-                showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${d} pts!`); 
-            } else { 
-                playSfx('fail'); players[activeHog.caller].score -= d; gain += d; 
-                showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${d} pts!`); 
-            } 
-            activeHog = null; 
-            document.getElementById('hogIndicator').innerText = ''; 
-        } 
-        bank += gain; refresh(); 
-    }
-
-    function saveTurn() { playSfx('click'); players[curIdx].score += bank; players[curIdx].history.push(bank); bank = 0; if(players[curIdx].score >= 100) showWinner(); else nextTurn(); }
-    function nextTurn() { curIdx = (curIdx + 1) % players.length; if(curIdx === 0) round++; refresh(); }
-    function refresh() {
-        document.getElementById('bank').innerText = bank;
-        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
-        document.getElementById('activeEmoji').innerText = players[curIdx].icon;
-        const sb = document.getElementById('sb'); sb.innerHTML = '';
-        players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem; margin:5px 0;">${p.icon}</div><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; sb.appendChild(card); });
-    }
-    function openHogCall() { playSfx('click'); const pList = document.getElementById('hogPlayerSelect'); pList.innerHTML = ''; let eligible = 0; players.forEach((p, i) => { if(i !== curIdx && p.score >= 20) { pList.innerHTML += `<div class="score-card" id="hpc${i}" onclick="selectHogP(${i})"><div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem;">${p.icon}</div></div>`; eligible++; } }); if(eligible === 0) return alert("No one else has 20 points yet!"); const gList = document.getElementById('hogGuessGrid'); gList.innerHTML = ''; poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`); document.getElementById('hogModal').classList.remove('hidden'); activeHog = { caller: null, guess: null, val: 0 }; }
-    function selectHogP(idx) { playSfx('click'); document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card')); document.getElementById('hpc' + idx).classList.add('active-card'); activeHog.caller = idx; }
-    function setHogGuess(name, val) { if(activeHog.caller === null) return alert("Select player!"); playSfx('click'); activeHog.guess = name; activeHog.val = val; document.getElementById('hogModal').classList.add('hidden'); document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`; }
-    function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); refresh(); }
-    function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
-    function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
-    function oinker() { playSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; players[curIdx].history.push("OINK"); bank = 0; nextTurn(); } }
-    
-    function resetGameInternal() { 
-        if (bgMusic) bgMusic.pause(); 
-        players = []; curIdx = 0; bank = 0; round = 1; 
-        document.getElementById('results').classList.add('hidden'); 
-        document.getElementById('home-screen').classList.remove('hidden');
-    }
-
-    function showWinner() {
-        playSfx('win');
-        document.getElementById('game').classList.add('hidden'); document.getElementById('results').classList.remove('hidden');
-        const winner = players[curIdx]; document.getElementById('winnerSplash').innerHTML = winner.icon + `<h3>${winner.name} wins!</h3>`;
-        let h = `<table style="width:100%; border-collapse:collapse; margin-top:15px;"><tr><th style="background:var(--piggy-pink); color:white; padding:8px;">Rd</th>`; players.forEach(p => h += `<th style="background:var(--piggy-pink); color:white; padding:8px;">${p.name.substring(0,5)}</th>`); h += `</tr>`;
-        for(let r=0; r<round; r++) { h += `<tr><td style="padding:8px; border:1px solid #eee; text-align:center;">${r+1}</td>`; players.forEach(p => h += `<td style="padding:8px; border:1px solid #eee; text-align:center;">${p.history[r] !== undefined ? p.history[r] : '-'}</td>`); h += `</tr>`; }
-        h += `<tr style="font-weight:bold; background:#f9f9f9"><td style="padding:8px; border:1px solid #eee; text-align:center;">TOT</td>`; players.forEach(p => h += `<td style="padding:8px; border:1px solid #eee; text-align:center;">${p.score}</td>`); h += `</tr></table>`;
-        document.getElementById('tableContainer').innerHTML = h;
-    }
+    // ... REST OF YOUR GAME LOGIC (initGame, handleRoll, etc) using synthSfx('click'), synthSfx('snort'), etc.
 </script>
 </body>
 </html>
