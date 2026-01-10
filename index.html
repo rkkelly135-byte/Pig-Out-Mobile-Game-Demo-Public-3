@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Piggy Party">
     <title>Pass the Pigs: Custom Music Edition</title>
+    
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap');
         :root {
@@ -14,7 +19,7 @@
             --hog-mud: #582f0e; --deep-pink: #fb6f92;
             --tan-shadow: #d4a373; --pink-shadow: #d94e6d; --mud-shadow: #3a1e09;
         }
-        body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-user-select: none; user-select: none; }
+        body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-user-select: none; user-select: none; touch-action: manipulation; }
         .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; }
         .hidden { display: none !important; }
         .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One'; }
