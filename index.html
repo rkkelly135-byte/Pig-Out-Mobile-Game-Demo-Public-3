@@ -4,46 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Piggy Party">
-    <title>Pass the Pigs: Rodeo Edition</title>
+    <title>Pass the Pigs: Custom Music Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap');
-
         :root {
             --piggy-pink: #ffafcc; --mud-brown: #7f5539; --sky-blue: #a2d2ff;
             --grass-green: #99d98c; --star-yellow: #fee440; --white: #ffffff;
             --hog-mud: #582f0e; --deep-pink: #fb6f92;
             --tan-shadow: #d4a373; --pink-shadow: #d94e6d; --mud-shadow: #3a1e09;
         }
-
-        body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-user-select: none; user-select: none; }
         .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; }
         .hidden { display: none !important; }
-
-        /* Audio Toggle */
-        .audio-toggle {
-            position: absolute; top: 15px; right: 15px; background: var(--white);
-            border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px;
-            cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One';
-        }
-
-        /* Scoreboard */
+        .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One'; }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
-        .scoreboard.no-scroll { overflow-x: visible; justify-content: center; }
-        .scoreboard.no-scroll .score-card { flex: 1; min-width: 0; }
         .score-card { background: var(--white); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; transition: 0.3s; }
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
-
-        /* Setup */
         .name-entry { padding: 15px; background: #fff; border-radius: 25px; border: 4px solid var(--piggy-pink); margin-bottom: 15px; }
         .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
         .emoji-opt { font-size: 1.8rem; cursor: pointer; padding: 5px; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; }
         .emoji-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
         .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; }
-
-        /* Buttons */
         .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; margin-top: 15px; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
         .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 15px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; box-shadow: 0 6px 0 var(--mud-shadow); font-size: 1.1rem; margin-bottom: 15px; }
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -54,26 +36,22 @@
         .btn-risk { background: #ff7096; color: var(--white); box-shadow: 0 6px 0 #c9184a; }
         .btn-oink { grid-column: span 2; background: #e63946; color: white; box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
         .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 20px; font-size: 1.3rem; box-shadow: 0 8px 0 #588157; margin-top: 10px; border-radius: 25px; }
-
         .turn-bank { font-family: 'Fredoka One'; font-size: 4.5rem; color: var(--piggy-pink); text-shadow: 3px 3px var(--mud-brown); line-height: 1; text-align: center; margin: 10px 0; }
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="audio-toggle" onclick="cycleAudioMode()">
         <span id="audioIcon">🔊</span>
         <span id="audioLabel" style="font-size: 0.5rem;">ALL ON</span>
     </div>
-
     <div id="setup">
         <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Piggy Party</h2>
         <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:60px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink);">
         <div id="nameFields" style="margin-top:20px"></div>
         <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
     </div>
-
     <div id="game" class="hidden">
         <div class="scoreboard" id="sb"></div>
         <button class="btn-hog-main" onclick="openHogCall()">📢 HOG CALL!</button>
@@ -98,20 +76,17 @@
             <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
         </div>
     </div>
-
     <div id="hogModal" class="custom-modal hidden">
         <h2 style="color:var(--hog-mud)">📢 HOG CALL!</h2>
         <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0;"></div>
         <div class="button-grid" id="hogGuessGrid"></div>
         <button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button>
     </div>
-
     <div id="hogResultModal" class="custom-modal hidden">
         <h2 id="resultHeader" style="color:var(--deep-pink)">Result</h2>
         <div id="resultContent" style="font-size:1.2rem; margin:20px 0; font-weight:700;"></div>
         <button class="btn-lets-roll" onclick="closeResultModal()">Back to Game</button>
     </div>
-
     <div id="results" class="hidden">
         <h2 style="font-family:'Fredoka One'">🏆 GAME OVER!</h2>
         <div id="winnerSplash" style="text-align:center; font-size:4.5rem"></div>
@@ -119,7 +94,6 @@
         <button class="btn-lets-roll" onclick="resetGameInternal()">New Game</button>
     </div>
 </div>
-
 <script>
     const audioMode = { ALL: 2, BUTTONS_ONLY: 1, MUTE: 0 };
     let currentMode = audioMode.ALL;
@@ -129,7 +103,7 @@
     function initAudio() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (!bgMusic) {
-            bgMusic = new Audio('https://www.soundjay.com/free-music/barn-beat-01.mp3');
+            bgMusic = new Audio('music.mp3'); 
             bgMusic.loop = true;
             bgMusic.volume = 0.2;
         }
@@ -169,7 +143,6 @@
     const pigEmojis = ["🐷", "🐽", "🐖", "🥓", "🐗", "👑", "🚀", "🎩", "🕵️", "💩"];
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'Double Trotter',v:20},{n:'Double Razorback',v:20},{n:'Double Snouter',v:40},{n:'Double Jowler',v:60}];
-
     let players = [], curIdx = 0, bank = 0, activeHog = null, round = 1;
 
     function drawSetup() {
@@ -180,16 +153,11 @@
             container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-emoji="${pigEmojis[i]}" value="${pigNames[i]}"></div>`;
         }
     }
-
     function selectEmoji(pIdx, eIdx, el) { playSynthSfx('pop'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
-
-    function initGame() { initAudio(); players = []; round = 1; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); if(players.length <= 5) document.getElementById('sb').classList.add('no-scroll'); refresh(); }
-
+    function initGame() { initAudio(); players = []; round = 1; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
     function handleRoll(v, name) { if(name === 'PIG OUT') { playSynthSfx('oink'); bank = 0; players[curIdx].history.push(0); activeHog = null; nextTurn(); return; } playSynthSfx('pop'); let gain = v; if(activeHog) { const d = activeHog.val * 2; if(name === activeHog.guess) { playSynthSfx('win'); players[activeHog.caller].score += d; gain -= d; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${d} pts!`); } else { playSynthSfx('oink'); players[activeHog.caller].score -= d; gain += d; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${d} pts!`); } activeHog = null; document.getElementById('hogIndicator').innerText = ''; } bank += gain; refresh(); }
-
     function saveTurn() { playSynthSfx('pop'); players[curIdx].score += bank; players[curIdx].history.push(bank); bank = 0; if(players[curIdx].score >= 100) showWinner(); else nextTurn(); }
     function nextTurn() { curIdx = (curIdx + 1) % players.length; if(curIdx === 0) round++; refresh(); }
-
     function refresh() {
         document.getElementById('bank').innerText = bank;
         document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
@@ -197,7 +165,6 @@
         const sb = document.getElementById('sb'); sb.innerHTML = '';
         players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem; margin:5px 0;">${p.icon}</div><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; sb.appendChild(card); });
     }
-
     function openHogCall() { playSynthSfx('pop'); const pList = document.getElementById('hogPlayerSelect'); pList.innerHTML = ''; let eligible = 0; players.forEach((p, i) => { if(i !== curIdx && p.score >= 20) { pList.innerHTML += `<div class="score-card" id="hpc${i}" onclick="selectHogP(${i})"><div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem;">${p.icon}</div></div>`; eligible++; } }); if(eligible === 0) return alert("No one else has 20 points yet!"); const gList = document.getElementById('hogGuessGrid'); gList.innerHTML = ''; poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`); document.getElementById('hogModal').classList.remove('hidden'); activeHog = { caller: null, guess: null, val: 0 }; }
     function selectHogP(idx) { playSynthSfx('pop'); document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card')); document.getElementById('hpc' + idx).classList.add('active-card'); activeHog.caller = idx; }
     function setHogGuess(name, val) { if(activeHog.caller === null) return alert("Select player!"); playSynthSfx('pop'); activeHog.guess = name; activeHog.val = val; document.getElementById('hogModal').classList.add('hidden'); document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`; }
@@ -205,9 +172,7 @@
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
     function oinker() { playSynthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; players[curIdx].history.push("OINK"); bank = 0; nextTurn(); } }
-
     function resetGameInternal() { if (bgMusic) bgMusic.pause(); players = []; curIdx = 0; bank = 0; round = 1; document.getElementById('results').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); drawSetup(); }
-
     function showWinner() {
         playSynthSfx('win');
         document.getElementById('game').classList.add('hidden'); document.getElementById('results').classList.remove('hidden');
@@ -217,7 +182,6 @@
         h += `<tr style="font-weight:bold; background:#f9f9f9"><td style="padding:8px; border:1px solid #eee; text-align:center;">TOT</td>`; players.forEach(p => h += `<td style="padding:8px; border:1px solid #eee; text-align:center;">${p.score}</td>`); h += `</tr></table>`;
         document.getElementById('tableContainer').innerHTML = h;
     }
-
     drawSetup();
 </script>
 </body>
