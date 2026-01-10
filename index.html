@@ -27,7 +27,6 @@
             -webkit-user-select: none; 
             user-select: none; 
             touch-action: manipulation;
-            /* Gameplay Background */
             background: url('background2.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100dvh;
@@ -49,19 +48,18 @@
             z-index: 5000;
         }
 
-        /* UPDATED TRANSPARENT CONTAINER */
         .container { 
             max-width: 450px; 
             margin: 20px auto; 
-            background: rgba(255, 255, 255, 0.3); /* High transparency */
+            background: rgba(255, 255, 255, 0.3); 
             padding: 25px; 
             border-radius: 40px; 
-            border: 2px solid var(--piggy-pink); /* Thinner border */
+            border: 2px solid var(--piggy-pink); 
             box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
             position: relative; 
             min-height: 80vh; 
             z-index: 10;
-            backdrop-filter: blur(8px); /* Blur effect to make text pop */
+            backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
 
@@ -83,11 +81,17 @@
 
         .btn-start-container { width: 100%; padding: 0 30px; box-sizing: border-box; }
         .name-entry { padding: 15px; background: rgba(255, 255, 255, 0.8); border-radius: 25px; border: 3px solid var(--piggy-pink); margin-bottom: 15px; }
-        .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
-        .emoji-opt { font-size: 1.8rem; cursor: pointer; padding: 5px; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; }
-        .emoji-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
-        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; }
         
+        /* Character Swiper Styles */
+        .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
+        .char-opt { width: 50px; height: 50px; cursor: pointer; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; object-fit: cover; }
+        .char-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
+        
+        /* Game Board Icons */
+        .score-char-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--piggy-pink); }
+        .active-char-img { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; border: 4px solid var(--piggy-pink); margin-bottom: 10px; }
+
+        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; }
         .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
         .score-card { background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
@@ -127,7 +131,7 @@
         <div id="game" class="hidden">
             <div class="scoreboard" id="sb"></div>
             <div class="turn-area" style="text-align:center;">
-                <div id="activeEmoji" style="font-size: 3.5rem;"></div>
+                <div id="activeImgContainer"></div>
                 <h3 id="activeTitle" style="margin:5px 0; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Turn</h3>
                 <div class="turn-bank" id="bank">0</div>
             </div>
@@ -152,6 +156,11 @@
     let currentMode = audioMode.ALL;
     let audioCtx = null;
     let bgMusic = null;
+
+    // Loading character images 1-10
+    const characterImages = Array.from({length: 10}, (_, i) => `character${i+1}.png`);
+    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
+    let players = [], curIdx = 0, bank = 0;
 
     function initAudio() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -200,32 +209,50 @@
         document.getElementById('main-container').classList.remove('hidden'); 
         drawSetup(); 
     }
-    
-    const pigEmojis = ["🐷", "🐽", "🐖", "🥓", "🐗", "👑", "🚀", "🎩", "🕵️", "💩"];
-    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
-    let players = [], curIdx = 0, bank = 0;
 
     function drawSetup() {
         const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
         const container = document.getElementById('nameFields'); 
         container.innerHTML = '';
         for(let i=0; i<val; i++) {
-            let swiper = pigEmojis.map((e, idx) => `<span class="emoji-opt ${idx === i ? 'selected' : ''}" onclick="selectEmoji(${i}, ${idx}, this)">${e}</span>`).join('');
-            container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-emoji="${pigEmojis[i]}" value="${pigNames[i]}"></div>`;
+            let swiper = characterImages.map((img, idx) => `<img src="${img}" class="char-opt ${idx === i ? 'selected' : ''}" onclick="selectChar(${i}, ${idx}, this)">`).join('');
+            container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-img="${characterImages[i]}" value="${pigNames[i]}"></div>`;
         }
     }
 
-    function selectEmoji(pIdx, eIdx, el) { synthSfx('click'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
-    function initGame() { players = []; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
+    function selectChar(pIdx, eIdx, el) { 
+        synthSfx('click'); 
+        const row = document.getElementById(`p-row-${pIdx}`); 
+        row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); 
+        el.classList.add('selected'); 
+        row.querySelector('.p-in').dataset.img = characterImages[eIdx]; 
+    }
+
+    function initGame() { 
+        players = []; curIdx = 0; bank = 0; 
+        document.querySelectorAll('.p-in').forEach(el => { 
+            players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img }); 
+        }); 
+        document.getElementById('setup').classList.add('hidden'); 
+        document.getElementById('game').classList.remove('hidden'); 
+        refresh(); 
+    }
+
     function handleRoll(v, name) { if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; nextTurn(); return; } synthSfx('click'); bank += v; refresh(); }
     function saveTurn() { synthSfx('click'); players[curIdx].score += bank; bank = 0; nextTurn(); }
     function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
+    
     function refresh() {
         document.getElementById('bank').innerText = bank;
         document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
-        document.getElementById('activeEmoji').innerText = players[curIdx].icon;
+        document.getElementById('activeImgContainer').innerHTML = `<img src="${players[curIdx].img}" class="active-char-img">`;
         const sb = document.getElementById('sb'); sb.innerHTML = '';
-        players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem; margin:5px 0;">${p.icon}</div><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; sb.appendChild(card); });
+        players.forEach((p, i) => { 
+            const card = document.createElement('div'); 
+            card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; 
+            card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; 
+            sb.appendChild(card); 
+        });
     }
     function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } }
 </script>
