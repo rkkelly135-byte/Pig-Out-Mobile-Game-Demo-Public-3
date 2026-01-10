@@ -142,56 +142,47 @@
 <script>
     const audioMode = { ALL: 2, BUTTONS_ONLY: 1, MUTE: 0 };
     let currentMode = audioMode.ALL;
-    let audioCtx = null;
     let bgMusic = null;
     let pCount = 2;
-    
-    // --- UPDATED MUSIC PLAYLIST LOGIC ---
     let musicIndex = 0;
     const playlist = ['music2.mp3', 'music3.mp3'];
+
+    // Load SFX files
+    const sfx = {
+        tan: new Audio('coin1.mp3'),
+        pink: new Audio('coin3.mp3'),
+        pigout: new Audio('pigout.wav'),
+        oinker: new Audio('oinker.wav'),
+        save: new Audio('coin2.mp3'),
+        yeehaw: new Audio('yeehaw.mp3'),
+        hog: new Audio('sooeey.m4a')
+    };
 
     const characterImages = Array.from({length: 10}, (_, i) => `characters${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trotter',v:20},{n:'D-Snouter',v:40},{n:'D-Jowler',v:60}];
     let players = [], curIdx = 0, bank = 0, activeHog = null;
 
+    function playSfx(key) {
+        if (currentMode === audioMode.MUTE) return;
+        const sound = sfx[key];
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+    }
+
     function initAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (!bgMusic) {
             bgMusic = new Audio(playlist[musicIndex]); 
             bgMusic.volume = 0.2;
-            
-            // Add listener to play next song when current one ends
             bgMusic.onended = function() {
                 musicIndex = (musicIndex + 1) % playlist.length;
                 bgMusic.src = playlist[musicIndex];
-                if (currentMode === audioMode.ALL) {
-                    bgMusic.play().catch(() => {});
-                }
+                if (currentMode === audioMode.ALL) bgMusic.play().catch(() => {});
             };
         }
         applyAudioMode();
-    }
-
-    function synthSfx(type) {
-        if (currentMode === audioMode.MUTE || !audioCtx) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        if (type === 'click') {
-            osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(10, now + 0.05);
-            gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-            osc.start(now); osc.stop(now + 0.05);
-        } else if (type === 'snort') {
-            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(80, now); osc.frequency.linearRampToValueAtTime(40, now + 0.2);
-            gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-            osc.start(now); osc.stop(now + 0.2);
-        } else if (type === 'oink') {
-            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now); osc.stop(now + 0.3);
-        }
     }
 
     function applyAudioMode() {
@@ -211,7 +202,7 @@
         }
     }
 
-    function cycleAudioMode() { if (!audioCtx) initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
+    function cycleAudioMode() { initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
 
     function updatePlayerCount(val) {
         pCount = Math.min(Math.max(pCount + val, 2), 10);
@@ -220,8 +211,8 @@
     }
 
     function showSetup() { 
-        if (!audioCtx) initAudio();
-        synthSfx('click');
+        initAudio();
+        playSfx('yeehaw'); // Start game sound
         document.getElementById('home-screen').classList.add('hidden'); 
         document.getElementById('main-container').classList.remove('hidden'); 
         drawSetup(); 
@@ -237,7 +228,7 @@
     }
 
     function selectChar(pIdx, eIdx, el) { 
-        synthSfx('click');
+        playSfx('tan');
         const row = document.getElementById(`p-row-${pIdx}`); 
         row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); 
         el.classList.add('selected'); 
@@ -245,6 +236,7 @@
     }
 
     function initGame() { 
+        playSfx('yeehaw'); // Let's Roll sound
         players = []; curIdx = 0; bank = 0; 
         document.querySelectorAll('.p-in').forEach(el => { 
             players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img }); 
@@ -255,8 +247,15 @@
     }
 
     function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; activeHog = null; nextTurn(); return; } 
-        synthSfx('click'); 
+        if(name === 'PIG OUT') { 
+            playSfx('pigout'); // Pig Out sound
+            bank = 0; activeHog = null; nextTurn(); return; 
+        } 
+        
+        // Handle roll sounds based on button type
+        const isPink = name.startsWith('D-');
+        playSfx(isPink ? 'pink' : 'tan');
+
         let gain = v;
         if(activeHog) {
             const doubleVal = activeHog.val * 2;
@@ -272,7 +271,11 @@
         bank += gain; refresh(); 
     }
 
-    function saveTurn() { synthSfx('click'); players[curIdx].score += bank; bank = 0; nextTurn(); }
+    function saveTurn() { 
+        playSfx('save'); // Save sound
+        players[curIdx].score += bank; bank = 0; nextTurn(); 
+    }
+    
     function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
     
     function refresh() {
@@ -293,7 +296,7 @@
     }
 
     function openHogCall() {
-        synthSfx('click');
+        playSfx('hog'); // Hog call sound
         const pList = document.getElementById('hogPlayerSelect');
         pList.innerHTML = ''; let eligible = 0;
         players.forEach((p, i) => {
@@ -311,7 +314,7 @@
     }
 
     function selectHogP(idx) {
-        synthSfx('click');
+        playSfx('tan');
         document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card'));
         document.getElementById('hpc' + idx).classList.add('active-card');
         activeHog.caller = idx;
@@ -319,7 +322,7 @@
 
     function setHogGuess(name, val) {
         if(activeHog.caller === null) return alert("Select challenger!");
-        synthSfx('click');
+        playSfx('tan');
         activeHog.guess = name; activeHog.val = val;
         document.getElementById('hogModal').classList.add('hidden');
         document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`;
@@ -328,7 +331,11 @@
     function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); refresh(); }
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
-    function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } }
+    
+    function oinker() { 
+        playSfx('oinker'); // Oinker sound
+        if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } 
+    }
 </script>
 </body>
 </html>
