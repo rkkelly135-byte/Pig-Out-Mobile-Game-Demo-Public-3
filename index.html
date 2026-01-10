@@ -27,7 +27,7 @@
             -webkit-user-select: none; 
             user-select: none; 
             touch-action: manipulation;
-            /* Applying the new gameplay background */
+            /* Gameplay Background */
             background: url('background2.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100dvh;
@@ -49,17 +49,20 @@
             z-index: 5000;
         }
 
+        /* UPDATED TRANSPARENT CONTAINER */
         .container { 
             max-width: 450px; 
             margin: 20px auto; 
-            background: rgba(255, 255, 255, 0.92); /* Slightly more transparent to see background2 */
+            background: rgba(255, 255, 255, 0.3); /* High transparency */
             padding: 25px; 
             border-radius: 40px; 
-            border: 6px solid var(--piggy-pink); 
-            box-shadow: 0 12px 0 rgba(0,0,0,0.1); 
+            border: 2px solid var(--piggy-pink); /* Thinner border */
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
             position: relative; 
             min-height: 80vh; 
             z-index: 10;
+            backdrop-filter: blur(8px); /* Blur effect to make text pop */
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .hidden { display: none !important; }
@@ -79,7 +82,7 @@
         }
 
         .btn-start-container { width: 100%; padding: 0 30px; box-sizing: border-box; }
-        .name-entry { padding: 15px; background: #fff; border-radius: 25px; border: 4px solid var(--piggy-pink); margin-bottom: 15px; }
+        .name-entry { padding: 15px; background: rgba(255, 255, 255, 0.8); border-radius: 25px; border: 3px solid var(--piggy-pink); margin-bottom: 15px; }
         .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
         .emoji-opt { font-size: 1.8rem; cursor: pointer; padding: 5px; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; }
         .emoji-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
@@ -87,12 +90,12 @@
         
         .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
-        .score-card { background: var(--white); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
+        .score-card { background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
         
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button.roll-btn { padding: 16px 5px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.85rem; position: relative; }
-        .btn-pts { background: #faedcd; color: var(--mud-brown); box-shadow: 0 6px 0 var(--tan-shadow); }
+        .btn-pts { background: rgba(250, 237, 205, 0.9); color: var(--mud-brown); box-shadow: 0 6px 0 var(--tan-shadow); }
         .btn-dbl { background: var(--piggy-pink); color: var(--white); box-shadow: 0 6px 0 var(--pink-shadow); }
         .btn-risk { background: #ff7096; color: var(--white); box-shadow: 0 6px 0 #c9184a; }
         .btn-oink { grid-column: span 2; background: #e63946; color: white; box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
@@ -114,8 +117,8 @@
 
     <div class="container hidden" id="main-container">
         <div id="setup">
-            <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Player Setup</h2>
-            <p style="text-align:center; font-weight:bold;">How many piggies?</p>
+            <h2 style="text-align:center; font-family:'Fredoka One'; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">🐷 Player Setup</h2>
+            <p style="text-align:center; font-weight:bold; color: var(--white); text-shadow: 1px 1px var(--mud-brown);">How many piggies?</p>
             <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:80px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink); font-size: 1.2rem;">
             <div id="nameFields" style="margin-top:20px"></div>
             <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
@@ -125,7 +128,7 @@
             <div class="scoreboard" id="sb"></div>
             <div class="turn-area" style="text-align:center;">
                 <div id="activeEmoji" style="font-size: 3.5rem;"></div>
-                <h3 id="activeTitle" style="margin:5px 0">Turn</h3>
+                <h3 id="activeTitle" style="margin:5px 0; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Turn</h3>
                 <div class="turn-bank" id="bank">0</div>
             </div>
             <div class="button-grid">
