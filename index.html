@@ -58,9 +58,24 @@
         .char-opt { width: 85px; height: 85px; cursor: pointer; border-bottom: 5px solid transparent; flex-shrink: 0; object-fit: contain; transition: 0.2s; }
         .char-opt.selected { border-color: var(--deep-pink); transform: scale(1.1); }
         
-        .scoreboard { display: flex; gap: 12px; padding: 10px 0; margin-bottom: 18px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; }
-        .score-card { background: rgba(255, 255, 255, 0.95); padding: 15px 10px; border-radius: 22px; min-width: 90px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .score-char-img { width: 65px; height: 65px; object-fit: contain; }
+        /* UPDATED COMPACT SCOREBOARD */
+        .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; }
+        .score-card { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 8px; /* Reduced padding for square look */
+            border-radius: 20px; 
+            min-width: 80px; 
+            height: 100px; /* Locked height for squareness */
+            text-align: center; 
+            border: 4px solid var(--piggy-pink); 
+            flex-shrink: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: space-between; /* Tight alignment */
+            gap: 2px; 
+        }
+        .score-char-img { width: 45px; height: 45px; object-fit: contain; } /* Slightly smaller for compactness */
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.05); }
         
         .active-char-img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px; }
@@ -159,7 +174,6 @@
         hog: new Audio('sooeey.m4a')
     };
 
-    // Updated to reference 12 "charactersclean" files
     const characterImages = Array.from({length: 12}, (_, i) => `charactersclean${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds", "Captain Bacon", "Wild Hog"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trotter',v:20},{n:'D-Snouter',v:40},{n:'D-Jowler',v:60}];
@@ -261,7 +275,11 @@
         players.forEach((p, i) => { 
             const card = document.createElement('div'); 
             card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; 
-            card.innerHTML = `<div style="font-size:0.7rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1.3rem; margin-top:5px;">${p.score}</div>`; 
+            card.innerHTML = `
+                <div style="font-size:0.6rem; font-weight:700;">${p.name}</div>
+                <img src="${p.img}" class="score-char-img">
+                <div style="font-family:'Fredoka One'; font-size:1.1rem;">${p.score}</div>
+            `; 
             sb.appendChild(card); 
         });
     }
