@@ -18,6 +18,8 @@
             --grass-green: #99d98c; --star-yellow: #fee440; --white: #ffffff;
             --hog-mud: #582f0e; --deep-pink: #fb6f92;
             --tan-shadow: #d4a373; --pink-shadow: #d94e6d; --mud-shadow: #3a1e09;
+            --charcoal: #333333; /* Dark Charcoal */
+            --danger-red: #e63946; /* Pig Out Red */
         }
         body { 
             font-family: 'Quicksand', sans-serif; 
@@ -47,7 +49,6 @@
         .hidden { display: none !important; }
         .audio-toggle { position: fixed; top: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; z-index: 6000; font-family: 'Fredoka One'; box-shadow: 0 4px 0 var(--pink-shadow); }
 
-        /* Character Styles */
         .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
         .char-opt { width: 50px; height: 50px; cursor: pointer; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; object-fit: cover; }
         .char-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
@@ -61,14 +62,20 @@
         button.roll-btn { padding: 16px 5px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.85rem; position: relative; }
         .btn-pts { background: rgba(250, 237, 205, 0.9); color: var(--mud-brown); box-shadow: 0 6px 0 var(--tan-shadow); }
         .btn-dbl { background: var(--piggy-pink); color: var(--white); box-shadow: 0 6px 0 var(--pink-shadow); }
-        .btn-risk { background: #ff7096; color: var(--white); box-shadow: 0 6px 0 #c9184a; }
-        .btn-oink { grid-column: span 2; background: #e63946; color: white; box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
+        
+        /* Updated Pig Out styling */
+        .btn-risk { grid-column: span 2; background: var(--danger-red); color: var(--white); box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
+        
+        /* Updated Oinker styling */
+        .btn-oink { grid-column: span 2; background: var(--charcoal); color: white; box-shadow: 0 6px 0 #000000; margin-top: 5px; }
+        
         .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 20px; font-size: 1.3rem; box-shadow: 0 8px 0 #588157; margin-top: 10px; border-radius: 25px; }
         
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
         .score-card { background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
+        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; }
     </style>
 </head>
 <body>
