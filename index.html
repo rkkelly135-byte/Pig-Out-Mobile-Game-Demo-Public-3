@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Piggy Party">
-    <title>Pass the Pigs: Rodeo Edition</title>
+    <title>Piggy Party: Rodeo Edition</title>
     
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -19,23 +19,38 @@
             --hog-mud: #582f0e; --deep-pink: #fb6f92;
             --tan-shadow: #d4a373; --pink-shadow: #d94e6d; --mud-shadow: #3a1e09;
         }
-        body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+        body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 0; color: var(--mud-brown); -webkit-user-select: none; user-select: none; touch-action: manipulation; }
         .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; }
         .hidden { display: none !important; }
 
-        /* Fixed Full-Size Logo Style */
-        #home-screen { text-align: center; }
-        .logo-img { 
-            width: 280px; height: 280px; 
-            border-radius: 60px; 
-            border: 8px solid var(--piggy-pink); 
-            margin-bottom: 20px; 
-            box-shadow: 0 8px 0 rgba(0,0,0,0.1); 
-            object-fit: cover; /* Ensures the pig fills the frame */
-            background-color: white; /* Replaces checkered background */
+        /* Full Screen Background Home Page */
+        #home-screen { 
+            text-align: center;
+            background: url('background.png') no-repeat center center; 
+            background-size: cover;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 60px;
+            box-sizing: border-box;
+        }
+
+        .home-content {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            margin: 0 25px;
+            border-radius: 35px;
+            border: 5px solid var(--piggy-pink);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
-        .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One'; }
+        .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 6000; font-family: 'Fredoka One'; }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
         .score-card { background: var(--white); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; transition: 0.3s; }
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
@@ -56,52 +71,50 @@
         .btn-oink { grid-column: span 2; background: #e63946; color: white; box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
         .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 20px; font-size: 1.3rem; box-shadow: 0 8px 0 #588157; margin-top: 10px; border-radius: 25px; }
         .turn-bank { font-family: 'Fredoka One'; font-size: 4.5rem; color: var(--piggy-pink); text-shadow: 3px 3px var(--mud-brown); line-height: 1; text-align: center; margin: 10px 0; }
-        .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; }
     </style>
 </head>
 <body>
-<div class="container">
     <div class="audio-toggle" onclick="cycleAudioMode()">
         <span id="audioIcon">🔊</span>
         <span id="audioLabel" style="font-size: 0.5rem;">ALL ON</span>
     </div>
 
     <div id="home-screen">
-        <img src="icon.png" alt="Logo" class="logo-img">
-        <h1 style="font-family:'Fredoka One'; font-size: 3rem; margin-bottom: 5px;">Piggy Party</h1>
-        <p style="font-weight: 700; margin-bottom: 25px; color: var(--deep-pink);">Rodeo Edition</p>
-        <button class="btn-lets-roll" onclick="showSetup()">Start Game</button>
-    </div>
-
-    <div id="setup" class="hidden">
-        <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Player Setup</h2>
-        <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:60px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink);">
-        <div id="nameFields" style="margin-top:20px"></div>
-        <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
-    </div>
-
-    <div id="game" class="hidden">
-        <div class="scoreboard" id="sb"></div>
-        <button class="btn-hog-main" onclick="openHogCall()">📢 HOG CALL!</button>
-        <div id="hogIndicator" style="text-align:center; color:var(--hog-mud); font-weight:bold; min-height:1.2em; margin-bottom:10px;"></div>
-        <div class="turn-area" style="text-align:center;">
-            <div id="activeEmoji" style="font-size: 3.5rem;"></div>
-            <h3 id="activeTitle" style="margin:5px 0">Turn</h3>
-            <div class="turn-bank" id="bank">0</div>
-        </div>
-        <div class="button-grid">
-            <button class="roll-btn btn-pts" onclick="handleRoll(1, 'Sider')">Sider (1)</button>
-            <button class="roll-btn btn-pts" onclick="handleRoll(5, 'Trotter')">Trotter (5)</button>
-            <button class="roll-btn btn-pts" onclick="handleRoll(5, 'Razorback')">Razorback (5)</button>
-            <button class="roll-btn btn-pts" onclick="handleRoll(10, 'Snouter')">Snouter (10)</button>
-            <button class="roll-btn btn-pts" onclick="handleRoll(15, 'Jowler')">Jowler (15)</button>
-            <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'Double Trotter')">D-Trot (20)</button>
-            <button class="roll-btn btn-risk" onclick="handleRoll(0, 'PIG OUT')">PIG OUT!</button>
-            <button class="roll-btn btn-oink" onclick="oinker()">OINKER (Back to 0)</button>
-            <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
+        <div class="home-content">
+            <h1 style="font-family:'Fredoka One'; font-size: 2.5rem; margin: 0; color: var(--mud-brown);">Piggy Party</h1>
+            <p style="font-weight: 700; color: var(--deep-pink); margin-bottom: 20px;">The Ultimate Rodeo Challenge!</p>
+            <button class="btn-lets-roll" onclick="showSetup()">Start Game</button>
         </div>
     </div>
-</div>
+
+    <div class="container" id="game-container">
+        <div id="setup" class="hidden">
+            <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Player Setup</h2>
+            <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:60px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink);">
+            <div id="nameFields" style="margin-top:20px"></div>
+            <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
+        </div>
+
+        <div id="game" class="hidden">
+            <div class="scoreboard" id="sb"></div>
+            <div class="turn-area" style="text-align:center;">
+                <div id="activeEmoji" style="font-size: 3.5rem;"></div>
+                <h3 id="activeTitle" style="margin:5px 0">Turn</h3>
+                <div class="turn-bank" id="bank">0</div>
+            </div>
+            <div class="button-grid">
+                <button class="roll-btn btn-pts" onclick="handleRoll(1, 'Sider')">Sider (1)</button>
+                <button class="roll-btn btn-pts" onclick="handleRoll(5, 'Trotter')">Trotter (5)</button>
+                <button class="roll-btn btn-pts" onclick="handleRoll(5, 'Razorback')">Razorback (5)</button>
+                <button class="roll-btn btn-pts" onclick="handleRoll(10, 'Snouter')">Snouter (10)</button>
+                <button class="roll-btn btn-pts" onclick="handleRoll(15, 'Jowler')">Jowler (15)</button>
+                <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'Double Trotter')">D-Trot (20)</button>
+                <button class="roll-btn btn-risk" onclick="handleRoll(0, 'PIG OUT')">PIG OUT!</button>
+                <button class="roll-btn btn-oink" onclick="oinker()">OINKER (Back to 0)</button>
+                <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
+            </div>
+        </div>
+    </div>
 
 <script>
     const audioMode = { ALL: 2, BUTTONS_ONLY: 1, MUTE: 0 };
@@ -135,54 +148,4 @@
             osc.start(now); osc.stop(now + 0.2);
         } else if (type === 'oink') {
             osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now); osc.stop(now + 0.3);
-        }
-    }
-
-    function applyAudioMode() {
-        if (!bgMusic) return;
-        if (currentMode === audioMode.ALL) { bgMusic.play().catch(() => {}); document.getElementById('audioIcon').innerText = "🔊"; document.getElementById('audioLabel').innerText = "ALL ON"; }
-        else if (currentMode === audioMode.BUTTONS_ONLY) { bgMusic.pause(); document.getElementById('audioIcon').innerText = "🔘"; document.getElementById('audioLabel').innerText = "BUTTONS"; }
-        else { bgMusic.pause(); document.getElementById('audioIcon').innerText = "🔇"; document.getElementById('audioLabel').innerText = "MUTE"; }
-    }
-
-    function cycleAudioMode() { if (!audioCtx) initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
-
-    function showSetup() { 
-        if (!audioCtx) initAudio(); 
-        synthSfx('click'); 
-        document.getElementById('home-screen').classList.add('hidden'); 
-        document.getElementById('setup').classList.remove('hidden'); 
-        drawSetup(); // Fixed: Added call to ensure player names draw on start
-    }
-    
-    const pigEmojis = ["🐷", "🐽", "🐖", "🥓", "🐗", "👑", "🚀", "🎩", "🕵️", "💩"];
-    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
-
-    function drawSetup() {
-        const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
-        const container = document.getElementById('nameFields'); 
-        container.innerHTML = '';
-        for(let i=0; i<val; i++) {
-            let swiper = pigEmojis.map((e, idx) => `<span class="emoji-opt ${idx === i ? 'selected' : ''}" onclick="selectEmoji(${i}, ${idx}, this)">${e}</span>`).join('');
-            container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-emoji="${pigEmojis[i]}" value="${pigNames[i]}"></div>`;
-        }
-    }
-
-    function selectEmoji(pIdx, eIdx, el) { synthSfx('click'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
-    function initGame() { players = []; round = 1; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
-    function handleRoll(v, name) { if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; players[curIdx].history.push(0); nextTurn(); return; } synthSfx('click'); bank += v; refresh(); }
-    function saveTurn() { synthSfx('click'); players[curIdx].score += bank; players[curIdx].history.push(bank); bank = 0; nextTurn(); }
-    function nextTurn() { curIdx = (curIdx + 1) % players.length; if(curIdx === 0) round++; refresh(); }
-    function refresh() {
-        document.getElementById('bank').innerText = bank;
-        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
-        document.getElementById('activeEmoji').innerText = players[curIdx].icon;
-        const sb = document.getElementById('sb'); sb.innerHTML = '';
-        players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem; margin:5px 0;">${p.icon}</div><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; sb.appendChild(card); });
-    }
-    function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; players[curIdx].history.push("OINK"); bank = 0; nextTurn(); } }
-</script>
-</body>
-</html>
+            gain.gain.setValueAtTime(0.2, now); gain
