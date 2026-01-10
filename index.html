@@ -53,19 +53,14 @@
         .player-count-display { font-family: 'Fredoka One'; font-size: 3rem; color: var(--deep-pink); text-shadow: 2px 2px var(--white); min-width: 60px; text-align: center; }
 
         .name-entry { padding: 20px; background: rgba(255, 255, 255, 0.85); border-radius: 30px; border: 3px solid var(--piggy-pink); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        
-        /* LARGER CHARACTER SELECT IMAGES */
         .emoji-swiper { display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 15px; }
         .char-opt { width: 85px; height: 85px; cursor: pointer; border-bottom: 5px solid transparent; flex-shrink: 0; object-fit: contain; transition: 0.2s; }
         .char-opt.selected { border-color: var(--deep-pink); transform: scale(1.1); }
         
-        /* SCOREBOARD UPDATES (No Pink Circles) */
         .scoreboard { display: flex; gap: 12px; padding: 10px 0; margin-bottom: 18px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; }
         .score-card { background: rgba(255, 255, 255, 0.95); padding: 15px 10px; border-radius: 22px; min-width: 90px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .score-char-img { width: 65px; height: 65px; object-fit: contain; }
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.05); }
-        
-        /* Gameplay Active Player Image */
         .active-char-img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px; }
 
         .audio-toggle { position: fixed; top: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; z-index: 6000; font-family: 'Fredoka One'; box-shadow: 0 4px 0 var(--pink-shadow); }
@@ -150,6 +145,10 @@
     let audioCtx = null;
     let bgMusic = null;
     let pCount = 2;
+    
+    // --- UPDATED MUSIC PLAYLIST LOGIC ---
+    let musicIndex = 0;
+    const playlist = ['music2.mp3', 'music3.mp3'];
 
     const characterImages = Array.from({length: 10}, (_, i) => `characters${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
@@ -159,9 +158,17 @@
     function initAudio() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (!bgMusic) {
-            bgMusic = new Audio('music.mp3'); 
-            bgMusic.loop = true;
+            bgMusic = new Audio(playlist[musicIndex]); 
             bgMusic.volume = 0.2;
+            
+            // Add listener to play next song when current one ends
+            bgMusic.onended = function() {
+                musicIndex = (musicIndex + 1) % playlist.length;
+                bgMusic.src = playlist[musicIndex];
+                if (currentMode === audioMode.ALL) {
+                    bgMusic.play().catch(() => {});
+                }
+            };
         }
         applyAudioMode();
     }
@@ -189,9 +196,19 @@
 
     function applyAudioMode() {
         if (!bgMusic) return;
-        if (currentMode === audioMode.ALL) { bgMusic.play().catch(() => {}); document.getElementById('audioIcon').innerText = "🔊"; document.getElementById('audioLabel').innerText = "ALL ON"; }
-        else if (currentMode === audioMode.BUTTONS_ONLY) { bgMusic.pause(); document.getElementById('audioIcon').innerText = "🔘"; document.getElementById('audioLabel').innerText = "BUTTONS"; }
-        else { bgMusic.pause(); document.getElementById('audioIcon').innerText = "🔇"; document.getElementById('audioLabel').innerText = "MUTE"; }
+        if (currentMode === audioMode.ALL) { 
+            bgMusic.play().catch(() => {}); 
+            document.getElementById('audioIcon').innerText = "🔊"; 
+            document.getElementById('audioLabel').innerText = "ALL ON"; 
+        } else if (currentMode === audioMode.BUTTONS_ONLY) { 
+            bgMusic.pause(); 
+            document.getElementById('audioIcon').innerText = "🔘"; 
+            document.getElementById('audioLabel').innerText = "BUTTONS"; 
+        } else { 
+            bgMusic.pause(); 
+            document.getElementById('audioIcon').innerText = "🔇"; 
+            document.getElementById('audioLabel').innerText = "MUTE"; 
+        }
     }
 
     function cycleAudioMode() { if (!audioCtx) initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
@@ -266,7 +283,6 @@
         players.forEach((p, i) => { 
             const card = document.createElement('div'); 
             card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; 
-            // Layout: Name at top, Character in middle, Score at bottom
             card.innerHTML = `
                 <div style="font-size:0.7rem; font-weight:700;">${p.name}</div>
                 <img src="${p.img}" class="score-char-img">
