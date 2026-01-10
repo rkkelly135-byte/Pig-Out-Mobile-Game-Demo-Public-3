@@ -21,13 +21,16 @@
         }
         body { 
             font-family: 'Quicksand', sans-serif; 
-            background: var(--sky-blue); 
             margin: 0; 
             padding: 0; 
             color: var(--mud-brown); 
             -webkit-user-select: none; 
             user-select: none; 
             touch-action: manipulation;
+            /* Applying the new gameplay background */
+            background: url('background2.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100dvh;
         }
         
         #home-screen { 
@@ -49,7 +52,7 @@
         .container { 
             max-width: 450px; 
             margin: 20px auto; 
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.92); /* Slightly more transparent to see background2 */
             padding: 25px; 
             border-radius: 40px; 
             border: 6px solid var(--piggy-pink); 
