@@ -28,14 +28,14 @@
             -webkit-user-select: none; 
             user-select: none; 
             touch-action: manipulation;
-            overflow: hidden;
+            /* REMOVED overflow: hidden to allow scrolling */
         }
         
-        /* New Professional Home Screen */
+        /* Fixed Background Home Screen */
         #home-screen { 
             background: url('background.png') no-repeat center center; 
             background-size: cover;
-            height: 100dvh; /* Dynamic viewport height for mobile */
+            height: 100dvh;
             width: 100vw;
             position: fixed;
             top: 0;
@@ -43,35 +43,12 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding-bottom: 40px;
+            padding-bottom: 60px;
             box-sizing: border-box;
-            z-index: 10;
+            z-index: 5000;
         }
 
-        .btn-start-container {
-            width: 100%;
-            padding: 0 30px;
-            box-sizing: border-box;
-        }
-
-        .audio-toggle { 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            background: var(--white); 
-            border: 3px solid var(--piggy-pink); 
-            border-radius: 20px; 
-            padding: 5px 10px; 
-            cursor: pointer; 
-            font-size: 0.8rem; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            box-shadow: 0 4px 0 var(--pink-shadow); 
-            z-index: 100; /* Ensures sound button stays on top */
-            font-family: 'Fredoka One'; 
-        }
-
+        /* Container now allows scrolling */
         .container { 
             max-width: 450px; 
             margin: 20px auto; 
@@ -82,36 +59,36 @@
             box-shadow: 0 12px 0 rgba(0,0,0,0.1); 
             position: relative; 
             min-height: 80vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
+            z-index: 10;
         }
 
         .hidden { display: none !important; }
+        
+        .audio-toggle { 
+            position: fixed; /* Keep it visible even when scrolling */
+            top: 20px; 
+            right: 20px; 
+            background: var(--white); 
+            border: 3px solid var(--piggy-pink); 
+            border-radius: 20px; 
+            padding: 5px 10px; 
+            cursor: pointer; 
+            z-index: 6000; 
+            font-family: 'Fredoka One'; 
+            box-shadow: 0 4px 0 var(--pink-shadow);
+        }
+
+        .btn-start-container { width: 100%; padding: 0 30px; box-sizing: border-box; }
         .name-entry { padding: 15px; background: #fff; border-radius: 25px; border: 4px solid var(--piggy-pink); margin-bottom: 15px; }
         .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
         .emoji-opt { font-size: 1.8rem; cursor: pointer; padding: 5px; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; }
         .emoji-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
-        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; }
-        .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
-        .score-card { background: var(--white); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; transition: 0.3s; }
-        .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
+        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; /* Prevents iOS zoom */ }
         
-        .btn-lets-roll { 
-            background: var(--deep-pink); 
-            color: var(--white); 
-            width: 100%; 
-            padding: 20px; 
-            border: none; 
-            border-radius: 50px; 
-            font-family: 'Fredoka One'; 
-            cursor: pointer; 
-            font-size: 1.5rem; 
-            box-shadow: 0 8px 0 var(--pink-shadow); 
-            transition: transform 0.1s;
-        }
-        .btn-lets-roll:active { transform: translateY(4px); box-shadow: 0 4px 0 var(--pink-shadow); }
-
+        .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
+        .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
+        .score-card { background: var(--white); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
+        .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button.roll-btn { padding: 16px 5px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.85rem; position: relative; }
         .btn-pts { background: #faedcd; color: var(--mud-brown); box-shadow: 0 6px 0 var(--tan-shadow); }
@@ -136,7 +113,8 @@
     <div class="container hidden" id="main-container">
         <div id="setup">
             <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Player Setup</h2>
-            <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:60px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink);">
+            <p style="text-align:center; font-weight:bold;">How many piggies?</p>
+            <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:80px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink); font-size: 1.2rem;">
             <div id="nameFields" style="margin-top:20px"></div>
             <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
         </div>
@@ -218,7 +196,7 @@
     
     const pigEmojis = ["🐷", "🐽", "🐖", "🥓", "🐗", "👑", "🚀", "🎩", "🕵️", "💩"];
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
-    let players = [], curIdx = 0, bank = 0, round = 1;
+    let players = [], curIdx = 0, bank = 0;
 
     function drawSetup() {
         const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
@@ -231,10 +209,10 @@
     }
 
     function selectEmoji(pIdx, eIdx, el) { synthSfx('click'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
-    function initGame() { players = []; round = 1; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
-    function handleRoll(v, name) { if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; players[curIdx].history.push(0); nextTurn(); return; } synthSfx('click'); bank += v; refresh(); }
-    function saveTurn() { synthSfx('click'); players[curIdx].score += bank; players[curIdx].history.push(bank); bank = 0; nextTurn(); }
-    function nextTurn() { curIdx = (curIdx + 1) % players.length; if(curIdx === 0) round++; refresh(); }
+    function initGame() { players = []; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
+    function handleRoll(v, name) { if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; nextTurn(); return; } synthSfx('click'); bank += v; refresh(); }
+    function saveTurn() { synthSfx('click'); players[curIdx].score += bank; bank = 0; nextTurn(); }
+    function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
     function refresh() {
         document.getElementById('bank').innerText = bank;
         document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
@@ -242,7 +220,7 @@
         const sb = document.getElementById('sb'); sb.innerHTML = '';
         players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem; margin:5px 0;">${p.icon}</div><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; sb.appendChild(card); });
     }
-    function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; players[curIdx].history.push("OINK"); bank = 0; nextTurn(); } }
+    function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } }
 </script>
 </body>
 </html>
