@@ -84,7 +84,6 @@
         
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
         
-        /* Updated Multi-Column Results Table */
         .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); font-size: 0.75rem; table-layout: fixed; }
         .results-table th { background: var(--piggy-pink); color: white; padding: 8px 4px; font-family: 'Fredoka One'; word-wrap: break-word; }
         .results-table td { padding: 6px 2px; border: 1px solid #ffe5ec; font-weight: bold; text-align: center; }
@@ -143,7 +142,6 @@
             <h1 style="color:var(--deep-pink); font-family:'Fredoka One'; font-size:2.5rem; margin-bottom:0;">YEEHAW!</h1>
             <h2 id="winnerName" style="margin-top:0; color:var(--mud-brown);">Winner</h2>
             <div id="winnerImgContainer"></div>
-            
             <div style="overflow-x: auto;">
                 <table class="results-table" id="finalScoreTable">
                     <thead id="tableHead"></thead>
@@ -151,7 +149,6 @@
                     <tfoot id="tableFoot"></tfoot>
                 </table>
             </div>
-            
             <button class="btn-lets-roll" onclick="playAgain()">Play Again! 🔄</button>
         </div>
 
@@ -172,7 +169,9 @@
     const audioMode = { ALL: 2, BUTTONS_ONLY: 1, MUTE: 0 };
     let currentMode = audioMode.ALL;
     let bgMusic = null, pCount = 2, musicIndex = 0;
-    const playlist = ['music2.mp3', 'music3.mp3'];
+    
+    // --- UPDATED PLAYLIST ORDER ---
+    const playlist = ['music2.mp3', 'music4.mp3', 'music5.mp3', 'music3.mp3'];
 
     const sfx = {
         tan: new Audio('coin1.mp3'), pink: new Audio('coin3.mp3'),
@@ -184,14 +183,18 @@
     const characterImages = Array.from({length: 12}, (_, i) => `charactersclean${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds", "Captain Bacon", "Wild Hog"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trotter',v:20},{n:'D-Snouter',v:40},{n:'D-Jowler',v:60}];
-    let players = [], curIdx = 0, bank = 0, activeHog = null, roundNumber = 1;
+    let players = [], curIdx = 0, bank = 0, activeHog = null;
 
     function playSfx(key) { if (currentMode === audioMode.MUTE) return; const sound = sfx[key]; if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); } }
 
     function initAudio() {
         if (!bgMusic) {
             bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2;
-            bgMusic.onended = function() { musicIndex = (musicIndex + 1) % playlist.length; bgMusic.src = playlist[musicIndex]; if (currentMode === audioMode.ALL) bgMusic.play().catch(() => {}); };
+            bgMusic.onended = function() { 
+                musicIndex = (musicIndex + 1) % playlist.length; // Cycles playlist
+                bgMusic.src = playlist[musicIndex]; 
+                if (currentMode === audioMode.ALL) bgMusic.play().catch(() => {}); 
+            };
         }
         applyAudioMode();
     }
@@ -204,15 +207,7 @@
     }
 
     function cycleAudioMode() { initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
-
-    function updatePlayerCount(val) { 
-        if (val > 0 && pCount < 10) { playSfx('pigout'); } 
-        else if (val < 0 && pCount > 2) { playSfx('oinker'); }
-        pCount = Math.min(Math.max(pCount + val, 2), 10); 
-        document.getElementById('pDisplay').innerText = pCount; 
-        drawSetup(); 
-    }
-
+    function updatePlayerCount(val) { if (val > 0 && pCount < 10) { playSfx('pigout'); } else if (val < 0 && pCount > 2) { playSfx('oinker'); } pCount = Math.min(Math.max(pCount + val, 2), 10); document.getElementById('pDisplay').innerText = pCount; drawSetup(); }
     function showSetup() { initAudio(); playSfx('yeehaw'); document.getElementById('home-screen').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); drawSetup(); }
 
     function drawSetup() {
@@ -224,12 +219,7 @@
     }
 
     function selectChar(pIdx, eIdx, el) { playSfx('tan'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.img = characterImages[eIdx]; }
-
-    function initGame() { 
-        playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; roundNumber = 1;
-        document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [] }); }); 
-        document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); 
-    }
+    function initGame() { playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
 
     function handleRoll(v, name) { 
         if(name === 'PIG OUT') { playSfx('pigout'); players[curIdx].history.push(0); bank = 0; activeHog = null; nextTurn(); return; } 
@@ -244,22 +234,13 @@
         bank += gain; if(players[curIdx].score + bank >= 100) { saveTurn(); } refresh(); 
     }
 
-    function saveTurn() { 
-        playSfx('save'); players[curIdx].score += bank; players[curIdx].history.push(bank); 
-        if(players[curIdx].score >= 100) { triggerWin(); return; }
-        bank = 0; nextTurn(); 
-    }
+    function saveTurn() { playSfx('save'); players[curIdx].score += bank; players[curIdx].history.push(bank); if(players[curIdx].score >= 100) { triggerWin(); return; } bank = 0; nextTurn(); }
 
     function triggerWin() {
-        playSfx('yeehaw');
-        document.getElementById('winnerName').innerText = players[curIdx].name;
+        playSfx('yeehaw'); document.getElementById('winnerName').innerText = players[curIdx].name;
         document.getElementById('winnerImgContainer').innerHTML = `<img src="${players[curIdx].img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`;
-        
-        const head = document.getElementById('tableHead');
-        const body = document.getElementById('tableBody');
-        const foot = document.getElementById('tableFoot');
+        const head = document.getElementById('tableHead'), body = document.getElementById('tableBody'), foot = document.getElementById('tableFoot');
         head.innerHTML = '<tr><th>Round</th>' + players.map(p => `<th><img src="${p.img}" style="width:20px; vertical-align:middle;"><br>${p.name}</th>`).join('') + '</tr>';
-        
         const maxRounds = Math.max(...players.map(p => p.history.length));
         body.innerHTML = '';
         for (let r = 0; r < maxRounds; r++) {
@@ -272,11 +253,10 @@
     }
 
     function playAgain() { playSfx('yeehaw'); location.reload(); }
-    function nextTurn() { curIdx = (curIdx + 1) % players.length; if (curIdx === 0) roundNumber++; refresh(); }
+    function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
     
     function refresh() {
-        document.getElementById('bank').innerText = bank;
-        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
+        document.getElementById('bank').innerText = bank; document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
         document.getElementById('activeImgContainer').innerHTML = `<img src="${players[curIdx].img}" class="active-char-img">`;
         const sb = document.getElementById('sb'); sb.innerHTML = '';
         players.forEach((p, i) => { 
@@ -304,4 +284,3 @@
 </script>
 </body>
 </html>
-
