@@ -58,29 +58,15 @@
         
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; }
         
-        /* UPDATED: ZERO SPACING SCORECARD */
         .score-card { 
             background: rgba(255, 255, 255, 0.95); 
-            padding: 5px; 
-            border-radius: 15px; 
-            min-width: 80px; 
-            height: 95px; 
-            text-align: center; 
-            border: 4px solid var(--piggy-pink); 
-            flex-shrink: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            overflow: hidden;
+            padding: 5px; border-radius: 15px; min-width: 80px; height: 95px; 
+            text-align: center; border: 4px solid var(--piggy-pink); 
+            flex-shrink: 0; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; overflow: hidden;
         }
         .score-card div, .score-card img { margin: 0; padding: 0; line-height: 1; }
-        .score-char-img { 
-            width: 55px; 
-            height: 55px; 
-            object-fit: cover; 
-            transform: scale(1.15); /* 15% zoom for crop effect */
-        } 
+        .score-char-img { width: 55px; height: 55px; object-fit: cover; transform: scale(1.15); } 
         
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.05); }
         .active-char-img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px; }
@@ -97,7 +83,14 @@
         .btn-risk { grid-column: span 2; background: var(--danger-red); color: var(--white); box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
         .btn-oink { grid-column: span 2; background: var(--charcoal); color: white; box-shadow: 0 6px 0 #000000; margin-top: 5px; }
         .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 22px; font-size: 1.4rem; box-shadow: 0 8px 0 #588157; margin-top: 12px; border-radius: 25px; }
+        
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
+        
+        /* Winner Table Styles */
+        .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); }
+        .results-table th { background: var(--piggy-pink); color: white; padding: 10px; font-family: 'Fredoka One'; }
+        .results-table td { padding: 12px; border-bottom: 1px solid #ffe5ec; font-weight: bold; }
+        .results-table tr:last-child td { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -146,6 +139,24 @@
                 <button class="roll-btn btn-oink" onclick="oinker()">OINKER (Back to 0)</button>
                 <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
             </div>
+        </div>
+
+        <div id="winnerModal" class="custom-modal hidden">
+            <h1 style="color:var(--deep-pink); font-family:'Fredoka One'; font-size:2.5rem; margin-bottom:0;">YEEHAW!</h1>
+            <h2 id="winnerName" style="margin-top:0; color:var(--mud-brown);">Winner</h2>
+            <div id="winnerImgContainer"></div>
+            
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Piggy</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+            
+            <button class="btn-lets-roll" onclick="playAgain()">Play Again! 🔄</button>
         </div>
 
         <div id="hogModal" class="custom-modal hidden">
@@ -268,8 +279,6 @@
             activeHog = null; document.getElementById('hogIndicator').innerText = '';
         }
         bank += gain; 
-        
-        // WIN CHECK ON ROLL (Standard Piggy Party Goal: 100)
         if(players[curIdx].score + bank >= 100) { saveTurn(); } 
         refresh(); 
     }
@@ -277,16 +286,30 @@
     function saveTurn() { 
         playSfx('save'); 
         players[curIdx].score += bank; 
-        
-        // WIN CHECK ON SAVE
-        if(players[curIdx].score >= 100) {
-            playSfx('yeehaw');
-            alert(`YEEHAW! ${players[curIdx].name} wins with ${players[curIdx].score} points!`);
-            location.reload();
-            return;
-        }
-        
+        if(players[curIdx].score >= 100) { triggerWin(); return; }
         bank = 0; nextTurn(); 
+    }
+
+    function triggerWin() {
+        playSfx('yeehaw');
+        document.getElementById('winnerName').innerText = players[curIdx].name;
+        document.getElementById('winnerImgContainer').innerHTML = `<img src="${players[curIdx].img}" style="width:150px; height:150px; object-fit:contain; border:6px solid var(--star-yellow); border-radius:30px; margin-bottom:10px;">`;
+        
+        const body = document.getElementById('resultsBody');
+        body.innerHTML = '';
+        players.sort((a,b) => b.score - a.score).forEach(p => {
+            body.innerHTML += `<tr><td><img src="${p.img}" style="width:30px; vertical-align:middle; margin-right:10px;">${p.name}</td><td>${p.score}</td></tr>`;
+        });
+        
+        document.getElementById('winnerModal').classList.remove('hidden');
+    }
+
+    function playAgain() {
+        playSfx('yeehaw');
+        document.getElementById('winnerModal').classList.add('hidden');
+        document.getElementById('game').classList.add('hidden');
+        document.getElementById('home-screen').classList.remove('hidden');
+        document.getElementById('main-container').classList.add('hidden');
     }
     
     function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
