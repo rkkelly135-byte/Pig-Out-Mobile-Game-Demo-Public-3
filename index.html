@@ -80,9 +80,13 @@
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button.roll-btn { padding: 18px 5px; border: none; border-radius: 22px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.9rem; position: relative; }
         .btn-pts { background: rgba(250, 237, 205, 0.9); color: var(--mud-brown); box-shadow: 0 6px 0 var(--tan-shadow); }
+        /* Double Buttons restored to Pink */
+        .btn-dbl { background: var(--piggy-pink); color: var(--white); box-shadow: 0 6px 0 var(--pink-shadow); }
         .btn-risk { grid-column: span 2; background: var(--danger-red); color: var(--white); box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
         .btn-oink { grid-column: span 2; background: var(--charcoal); color: white; box-shadow: 0 6px 0 #000000; margin-top: 5px; }
         .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 22px; font-size: 1.4rem; box-shadow: 0 8px 0 #588157; margin-top: 12px; border-radius: 25px; }
+        /* Disabled Save State for Redemption Round */
+        .btn-save:disabled { background: #a5a5a5; box-shadow: 0 8px 0 #777; opacity: 0.6; cursor: not-allowed; }
         
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
         .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); font-size: 0.75rem; table-layout: fixed; }
@@ -119,7 +123,7 @@
             <div class="turn-area" style="text-align:center;">
                 <div id="activeImgContainer"></div>
                 <h3 id="activeTitle" style="margin:5px 0; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Turn</h3>
-                <div id="redemptionIndicator" class="hidden" style="color:var(--danger-red); font-weight:bold; font-size:0.8rem;">🔥 REDEMPTION MODE: OUT IF YOU PIG OUT!</div>
+                <div id="redemptionIndicator" class="hidden" style="color:var(--danger-red); font-weight:bold; font-size:0.8rem;">🔥 REDEMPTION: BEAT THE LEADER OR YOU'RE OUT!</div>
                 <div class="turn-bank" id="bank" style="font-family:'Fredoka One'; font-size:4.5rem; color:var(--piggy-pink); text-shadow:3px 3px var(--mud-brown);">0</div>
             </div>
             <div class="button-grid">
@@ -128,12 +132,12 @@
                 <button class="roll-btn btn-pts" onclick="handleRoll(5, 'Razorback')">Razorback (5)</button>
                 <button class="roll-btn btn-pts" onclick="handleRoll(10, 'Snouter')">Snouter (10)</button>
                 <button class="roll-btn btn-pts" onclick="handleRoll(15, 'Jowler')">Jowler (15)</button>
-                <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'D-Trotter')">D-Trot (20)</button>
-                <button class="roll-btn btn-dbl" onclick="handleRoll(40, 'D-Snouter')">D-Snout (40)</button>
-                <button class="roll-btn btn-dbl" onclick="handleRoll(60, 'D-Jowler')">D-Jowl (60)</button>
+                <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'D-Trot')">D-Trot (20)</button>
+                <button class="roll-btn btn-dbl" onclick="handleRoll(40, 'D-Snout')">D-Snout (40)</button>
+                <button class="roll-btn btn-dbl" onclick="handleRoll(60, 'D-Jowl')">D-Jowl (60)</button>
                 <button class="roll-btn btn-risk" onclick="handleRoll(0, 'PIG OUT')">PIG OUT!</button>
                 <button class="roll-btn btn-oink" onclick="oinker()">OINKER (Back to 0)</button>
-                <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
+                <button id="saveBtn" class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
             </div>
         </div>
 
@@ -171,10 +175,10 @@
 
     const characterImages = Array.from({length: 15}, (_, i) => `charactersclean${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds", "Captain Bacon", "Wild Hog", "Rodeo Rick", "Muddy Buddy", "Piggy Smalls"];
-    const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trotter',v:20},{n:'D-Snouter',v:40},{n:'D-Jowler',v:60}];
+    const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trot',v:20},{n:'D-Snout',v:40},{n:'D-Jowl',v:60}];
     
     let players = [], curIdx = 0, bank = 0, activeHog = null;
-    let inRedemption = false, originalWinner = null;
+    let inRedemption = false, originalWinnerIdx = null;
 
     function playSfx(key) {
         if (document.getElementById('muteToggle').checked || !document.getElementById('sfxToggle').checked) return;
@@ -211,8 +215,9 @@
 
     function selectChar(pIdx, eIdx, el) { playSfx('tan'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.img = characterImages[eIdx]; }
     function initGame() { 
-        playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; inRedemption = false; originalWinner = null;
+        playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; inRedemption = false; originalWinnerIdx = null;
         document.getElementById('redemptionIndicator').classList.add('hidden');
+        document.getElementById('saveBtn').disabled = false;
         document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [], eliminated: false }); }); 
         document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); 
     }
@@ -245,20 +250,28 @@
 
     function startRedemption() {
         inRedemption = true;
-        originalWinner = players.indexOf(players.find(p => p.score >= 100));
-        players[originalWinner].eliminated = true; // Winner sits out Redemption
+        originalWinnerIdx = players.indexOf(players.find(p => p.score >= 100));
+        // Leader is the bar to beat
+        players[originalWinnerIdx].eliminated = true; 
         document.getElementById('winnerModal').classList.add('hidden');
         document.getElementById('redemptionIndicator').classList.remove('hidden');
         document.getElementById('redemptionBtn').classList.add('hidden');
         bank = 0;
-        // Find first player who isn't the winner
-        curIdx = (originalWinner + 1) % players.length;
+        curIdx = (originalWinnerIdx + 1) % players.length;
         refresh();
     }
 
     function triggerWin() {
         playSfx('yeehaw');
-        const winner = players[curIdx];
+        // Final check to see who is the true winner (either original or redemption)
+        let winner;
+        if(inRedemption) {
+            const active = players.filter(p => !p.eliminated);
+            winner = active.length === 1 ? active[0] : players[originalWinnerIdx];
+        } else {
+            winner = players[curIdx];
+        }
+
         document.getElementById('winHeader').innerText = inRedemption ? "REDEMPTION WINNER!" : "YEEHAW!";
         document.getElementById('winnerName').innerText = winner.name;
         document.getElementById('winnerImgContainer').innerHTML = `<img src="${winner.img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`;
@@ -282,16 +295,9 @@
         let startingIdx = curIdx;
         do { curIdx = (curIdx + 1) % players.length; } while (players[curIdx].eliminated && curIdx !== startingIdx);
         
-        // If in redemption and only one non-eliminated player left, they win
         if(inRedemption) {
             const active = players.filter(p => !p.eliminated);
-            if(active.length === 0) { // If everyone challenged and lost
-                curIdx = originalWinner;
-                triggerWin();
-                return;
-            }
-            if(active.length === 1 && players[curIdx] === active[0]) {
-                // If only one player is left after rounds of elimination
+            if(active.length === 0 || (active.length === 1 && players[curIdx] === active[0])) {
                 triggerWin();
                 return;
             }
@@ -303,6 +309,15 @@
         document.getElementById('bank').innerText = bank;
         document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
         document.getElementById('activeImgContainer').innerHTML = `<img src="${players[curIdx].img}" class="active-char-img">`;
+        
+        // REDEMPTION SAVE LOGIC: Disable save if player hasn't beaten leader
+        if(inRedemption) {
+            const leaderScore = players[originalWinnerIdx].score;
+            document.getElementById('saveBtn').disabled = (players[curIdx].score + bank <= leaderScore);
+        } else {
+            document.getElementById('saveBtn').disabled = false;
+        }
+
         const sb = document.getElementById('sb'); sb.innerHTML = '';
         players.forEach((p, i) => { 
             if(p.eliminated && !inRedemption) return;
