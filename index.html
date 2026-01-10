@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Piggy Party">
-    <title>Pass the Pigs: Custom Music Edition</title>
+    <title>Pass the Pigs: Ultimate App</title>
     
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -20,8 +20,13 @@
             --tan-shadow: #d4a373; --pink-shadow: #d94e6d; --mud-shadow: #3a1e09;
         }
         body { font-family: 'Quicksand', sans-serif; background: var(--sky-blue); margin: 0; padding: 10px; color: var(--mud-brown); -webkit-user-select: none; user-select: none; touch-action: manipulation; }
-        .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; }
+        .container { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 40px; border: 6px solid var(--piggy-pink); box-shadow: 0 12px 0 rgba(0,0,0,0.1); position: relative; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
         .hidden { display: none !important; }
+
+        /* Home Screen Styles */
+        #home-screen { text-align: center; }
+        .logo-img { width: 200px; height: 200px; border-radius: 50px; border: 6px solid var(--piggy-pink); margin-bottom: 20px; box-shadow: 0 8px 0 rgba(0,0,0,0.1); }
+        
         .audio-toggle { position: absolute; top: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 var(--pink-shadow); z-index: 2000; font-family: 'Fredoka One'; }
         .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
         .score-card { background: var(--white); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; transition: 0.3s; }
@@ -31,6 +36,7 @@
         .emoji-opt { font-size: 1.8rem; cursor: pointer; padding: 5px; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; }
         .emoji-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
         .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; }
+        
         .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; margin-top: 15px; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
         .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 15px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; box-shadow: 0 6px 0 var(--mud-shadow); font-size: 1.1rem; margin-bottom: 15px; }
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -51,12 +57,21 @@
         <span id="audioIcon">🔊</span>
         <span id="audioLabel" style="font-size: 0.5rem;">ALL ON</span>
     </div>
-    <div id="setup">
-        <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Piggy Party</h2>
+
+    <div id="home-screen">
+        <img src="icon.png" alt="Piggy Party Logo" class="logo-img">
+        <h1 style="font-family:'Fredoka One'; font-size: 2.5rem; margin-bottom: 10px;">Piggy Party</h1>
+        <p style="font-weight: 700; margin-bottom: 30px;">The Ultimate Rodeo Challenge!</p>
+        <button class="btn-lets-roll" onclick="showSetup()">Start Game</button>
+    </div>
+
+    <div id="setup" class="hidden">
+        <h2 style="text-align:center; font-family:'Fredoka One';">🐷 Player Setup</h2>
         <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:60px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink);">
         <div id="nameFields" style="margin-top:20px"></div>
         <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
     </div>
+
     <div id="game" class="hidden">
         <div class="scoreboard" id="sb"></div>
         <button class="btn-hog-main" onclick="openHogCall()">📢 HOG CALL!</button>
@@ -81,6 +96,7 @@
             <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
         </div>
     </div>
+
     <div id="hogModal" class="custom-modal hidden">
         <h2 style="color:var(--hog-mud)">📢 HOG CALL!</h2>
         <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0;"></div>
@@ -99,6 +115,7 @@
         <button class="btn-lets-roll" onclick="resetGameInternal()">New Game</button>
     </div>
 </div>
+
 <script>
     const audioMode = { ALL: 2, BUTTONS_ONLY: 1, MUTE: 0 };
     let currentMode = audioMode.ALL;
@@ -150,6 +167,13 @@
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'Double Trotter',v:20},{n:'Double Razorback',v:20},{n:'Double Snouter',v:40},{n:'Double Jowler',v:60}];
     let players = [], curIdx = 0, bank = 0, activeHog = null, round = 1;
 
+    function showSetup() {
+        playSynthSfx('pop');
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('setup').classList.remove('hidden');
+        drawSetup();
+    }
+
     function drawSetup() {
         const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
         const container = document.getElementById('nameFields'); container.innerHTML = '';
@@ -159,7 +183,16 @@
         }
     }
     function selectEmoji(pIdx, eIdx, el) { playSynthSfx('pop'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
-    function initGame() { initAudio(); players = []; round = 1; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
+    
+    function initGame() { 
+        initAudio(); 
+        players = []; round = 1; curIdx = 0; bank = 0; 
+        document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); 
+        document.getElementById('setup').classList.add('hidden'); 
+        document.getElementById('game').classList.remove('hidden'); 
+        refresh(); 
+    }
+
     function handleRoll(v, name) { if(name === 'PIG OUT') { playSynthSfx('oink'); bank = 0; players[curIdx].history.push(0); activeHog = null; nextTurn(); return; } playSynthSfx('pop'); let gain = v; if(activeHog) { const d = activeHog.val * 2; if(name === activeHog.guess) { playSynthSfx('win'); players[activeHog.caller].score += d; gain -= d; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${d} pts!`); } else { playSynthSfx('oink'); players[activeHog.caller].score -= d; gain += d; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${d} pts!`); } activeHog = null; document.getElementById('hogIndicator').innerText = ''; } bank += gain; refresh(); }
     function saveTurn() { playSynthSfx('pop'); players[curIdx].score += bank; players[curIdx].history.push(bank); bank = 0; if(players[curIdx].score >= 100) showWinner(); else nextTurn(); }
     function nextTurn() { curIdx = (curIdx + 1) % players.length; if(curIdx === 0) round++; refresh(); }
@@ -177,7 +210,14 @@
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
     function oinker() { playSynthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; players[curIdx].history.push("OINK"); bank = 0; nextTurn(); } }
-    function resetGameInternal() { if (bgMusic) bgMusic.pause(); players = []; curIdx = 0; bank = 0; round = 1; document.getElementById('results').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); drawSetup(); }
+    
+    function resetGameInternal() { 
+        if (bgMusic) bgMusic.pause(); 
+        players = []; curIdx = 0; bank = 0; round = 1; 
+        document.getElementById('results').classList.add('hidden'); 
+        document.getElementById('home-screen').classList.remove('hidden');
+    }
+
     function showWinner() {
         playSynthSfx('win');
         document.getElementById('game').classList.add('hidden'); document.getElementById('results').classList.remove('hidden');
@@ -187,7 +227,6 @@
         h += `<tr style="font-weight:bold; background:#f9f9f9"><td style="padding:8px; border:1px solid #eee; text-align:center;">TOT</td>`; players.forEach(p => h += `<td style="padding:8px; border:1px solid #eee; text-align:center;">${p.score}</td>`); h += `</tr></table>`;
         document.getElementById('tableContainer').innerHTML = h;
     }
-    drawSetup();
 </script>
 </body>
 </html>
