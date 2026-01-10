@@ -84,10 +84,11 @@
         
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
         
-        .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); font-size: 0.85rem; }
-        .results-table th { background: var(--piggy-pink); color: white; padding: 10px; font-family: 'Fredoka One'; }
-        .results-table td { padding: 8px; border-bottom: 1px solid #ffe5ec; font-weight: bold; text-align: left; }
-        .round-history { font-size: 0.7rem; color: #888; font-weight: normal; display: block; max-width: 200px; overflow-wrap: break-word; }
+        /* Updated Multi-Column Results Table */
+        .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); font-size: 0.75rem; table-layout: fixed; }
+        .results-table th { background: var(--piggy-pink); color: white; padding: 8px 4px; font-family: 'Fredoka One'; word-wrap: break-word; }
+        .results-table td { padding: 6px 2px; border: 1px solid #ffe5ec; font-weight: bold; text-align: center; }
+        .total-row { background: var(--star-yellow); color: var(--mud-brown); font-size: 1rem; }
     </style>
 </head>
 <body>
@@ -143,15 +144,13 @@
             <h2 id="winnerName" style="margin-top:0; color:var(--mud-brown);">Winner</h2>
             <div id="winnerImgContainer"></div>
             
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Piggy</th>
-                        <th>History & Final Score</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsBody"></tbody>
-            </table>
+            <div style="overflow-x: auto;">
+                <table class="results-table" id="finalScoreTable">
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                    <tfoot id="tableFoot"></tfoot>
+                </table>
+            </div>
             
             <button class="btn-lets-roll" onclick="playAgain()">Play Again! 🔄</button>
         </div>
@@ -185,7 +184,7 @@
     const characterImages = Array.from({length: 12}, (_, i) => `charactersclean${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds", "Captain Bacon", "Wild Hog"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trotter',v:20},{n:'D-Snouter',v:40},{n:'D-Jowler',v:60}];
-    let players = [], curIdx = 0, bank = 0, activeHog = null;
+    let players = [], curIdx = 0, bank = 0, activeHog = null, roundNumber = 1;
 
     function playSfx(key) { if (currentMode === audioMode.MUTE) return; const sound = sfx[key]; if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); } }
 
@@ -205,7 +204,15 @@
     }
 
     function cycleAudioMode() { initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
-    function updatePlayerCount(val) { pCount = Math.min(Math.max(pCount + val, 2), 10); document.getElementById('pDisplay').innerText = pCount; drawSetup(); }
+
+    function updatePlayerCount(val) { 
+        if (val > 0 && pCount < 10) { playSfx('pigout'); } 
+        else if (val < 0 && pCount > 2) { playSfx('oinker'); }
+        pCount = Math.min(Math.max(pCount + val, 2), 10); 
+        document.getElementById('pDisplay').innerText = pCount; 
+        drawSetup(); 
+    }
+
     function showSetup() { initAudio(); playSfx('yeehaw'); document.getElementById('home-screen').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); drawSetup(); }
 
     function drawSetup() {
@@ -219,19 +226,19 @@
     function selectChar(pIdx, eIdx, el) { playSfx('tan'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.img = characterImages[eIdx]; }
 
     function initGame() { 
-        playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; 
+        playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; roundNumber = 1;
         document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [] }); }); 
         document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); 
     }
 
     function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { playSfx('pigout'); players[curIdx].history.push("PigOut(0)"); bank = 0; activeHog = null; nextTurn(); return; } 
+        if(name === 'PIG OUT') { playSfx('pigout'); players[curIdx].history.push(0); bank = 0; activeHog = null; nextTurn(); return; } 
         playSfx(name.startsWith('D-') ? 'pink' : 'tan');
         let gain = v;
         if(activeHog) {
             const doubleVal = activeHog.val * 2;
-            if(name === activeHog.guess) { players[activeHog.caller].score += doubleVal; players[activeHog.caller].history.push(`HogCall+${doubleVal}`); gain -= doubleVal; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${doubleVal} pts!`); }
-            else { players[activeHog.caller].score -= doubleVal; players[activeHog.caller].history.push(`HogCall-${doubleVal}`); gain += doubleVal; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${doubleVal} pts!`); }
+            if(name === activeHog.guess) { players[activeHog.caller].score += doubleVal; players[activeHog.caller].history.push(`+${doubleVal}*`); gain -= doubleVal; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${doubleVal} pts!`); }
+            else { players[activeHog.caller].score -= doubleVal; players[activeHog.caller].history.push(`-${doubleVal}*`); gain += doubleVal; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${doubleVal} pts!`); }
             activeHog = null; document.getElementById('hogIndicator').innerText = '';
         }
         bank += gain; if(players[curIdx].score + bank >= 100) { saveTurn(); } refresh(); 
@@ -247,15 +254,25 @@
         playSfx('yeehaw');
         document.getElementById('winnerName').innerText = players[curIdx].name;
         document.getElementById('winnerImgContainer').innerHTML = `<img src="${players[curIdx].img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`;
-        const body = document.getElementById('resultsBody'); body.innerHTML = '';
-        players.sort((a,b) => b.score - a.score).forEach(p => {
-            body.innerHTML += `<tr><td><img src="${p.img}" style="width:25px; vertical-align:middle; margin-right:5px;">${p.name}</td><td>${p.score}<span class="round-history">Rounds: ${p.history.join(', ')}</span></td></tr>`;
-        });
+        
+        const head = document.getElementById('tableHead');
+        const body = document.getElementById('tableBody');
+        const foot = document.getElementById('tableFoot');
+        head.innerHTML = '<tr><th>Round</th>' + players.map(p => `<th><img src="${p.img}" style="width:20px; vertical-align:middle;"><br>${p.name}</th>`).join('') + '</tr>';
+        
+        const maxRounds = Math.max(...players.map(p => p.history.length));
+        body.innerHTML = '';
+        for (let r = 0; r < maxRounds; r++) {
+            let row = `<tr><td>${r + 1}</td>`;
+            players.forEach(p => { row += `<td>${p.history[r] !== undefined ? p.history[r] : '-'}</td>`; });
+            body.innerHTML += row + '</tr>';
+        }
+        foot.innerHTML = `<tr class="total-row"><td>Total</td>${players.map(p => `<td>${p.score}</td>`).join('')}</tr>`;
         document.getElementById('winnerModal').classList.remove('hidden');
     }
 
     function playAgain() { playSfx('yeehaw'); location.reload(); }
-    function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
+    function nextTurn() { curIdx = (curIdx + 1) % players.length; if (curIdx === 0) roundNumber++; refresh(); }
     
     function refresh() {
         document.getElementById('bank').innerText = bank;
@@ -283,7 +300,7 @@
     function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); refresh(); }
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
-    function oinker() { playSfx('oinker'); players[curIdx].history.push("Oinked(Total 0)"); players[curIdx].score = 0; bank = 0; nextTurn(); }
+    function oinker() { playSfx('oinker'); players[curIdx].history.push("X"); players[curIdx].score = 0; bank = 0; nextTurn(); }
 </script>
 </body>
 </html>
