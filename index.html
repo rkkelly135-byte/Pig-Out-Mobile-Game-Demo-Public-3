@@ -154,4 +154,35 @@
         synthSfx('click'); 
         document.getElementById('home-screen').classList.add('hidden'); 
         document.getElementById('setup').classList.remove('hidden'); 
-        drawSetup(); // Fixed
+        drawSetup(); // Fixed: Added call to ensure player names draw on start
+    }
+    
+    const pigEmojis = ["🐷", "🐽", "🐖", "🥓", "🐗", "👑", "🚀", "🎩", "🕵️", "💩"];
+    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
+
+    function drawSetup() {
+        const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
+        const container = document.getElementById('nameFields'); 
+        container.innerHTML = '';
+        for(let i=0; i<val; i++) {
+            let swiper = pigEmojis.map((e, idx) => `<span class="emoji-opt ${idx === i ? 'selected' : ''}" onclick="selectEmoji(${i}, ${idx}, this)">${e}</span>`).join('');
+            container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-emoji="${pigEmojis[i]}" value="${pigNames[i]}"></div>`;
+        }
+    }
+
+    function selectEmoji(pIdx, eIdx, el) { synthSfx('click'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.emoji = pigEmojis[eIdx]; }
+    function initGame() { players = []; round = 1; curIdx = 0; bank = 0; document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, icon: el.dataset.emoji, history: [] }); }); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); }
+    function handleRoll(v, name) { if(name === 'PIG OUT') { synthSfx('snort'); bank = 0; players[curIdx].history.push(0); nextTurn(); return; } synthSfx('click'); bank += v; refresh(); }
+    function saveTurn() { synthSfx('click'); players[curIdx].score += bank; players[curIdx].history.push(bank); bank = 0; nextTurn(); }
+    function nextTurn() { curIdx = (curIdx + 1) % players.length; if(curIdx === 0) round++; refresh(); }
+    function refresh() {
+        document.getElementById('bank').innerText = bank;
+        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
+        document.getElementById('activeEmoji').innerText = players[curIdx].icon;
+        const sb = document.getElementById('sb'); sb.innerHTML = '';
+        players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''}`; card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><div style="font-size:1.5rem; margin:5px 0;">${p.icon}</div><div style="font-family:'Fredoka One'; font-size:1.2rem;">${p.score}</div>`; sb.appendChild(card); });
+    }
+    function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; players[curIdx].history.push("OINK"); bank = 0; nextTurn(); } }
+</script>
+</body>
+</html>
