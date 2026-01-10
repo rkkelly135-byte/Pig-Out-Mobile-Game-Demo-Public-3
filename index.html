@@ -47,38 +47,68 @@
         }
 
         .hidden { display: none !important; }
-        .audio-toggle { position: fixed; top: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 20px; padding: 5px 10px; cursor: pointer; z-index: 6000; font-family: 'Fredoka One'; box-shadow: 0 4px 0 var(--pink-shadow); }
 
-        .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 10px; }
-        .char-opt { width: 50px; height: 50px; cursor: pointer; border: 3px solid transparent; border-radius: 12px; flex-shrink: 0; object-fit: cover; }
-        .char-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.1); }
-        .score-char-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--piggy-pink); }
-        .active-char-img { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; border: 4px solid var(--piggy-pink); margin-bottom: 10px; }
+        /* Stylized Player Stepper */
+        .stepper-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .step-btn {
+            background: var(--piggy-pink);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-family: 'Fredoka One';
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--pink-shadow);
+        }
+        .step-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--pink-shadow); }
+        .player-count-display {
+            font-family: 'Fredoka One';
+            font-size: 3rem;
+            color: var(--deep-pink);
+            text-shadow: 2px 2px var(--white);
+            min-width: 60px;
+            text-align: center;
+        }
 
-        .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 20px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; font-size: 1.5rem; box-shadow: 0 8px 0 var(--pink-shadow); }
-        .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 15px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; box-shadow: 0 6px 0 var(--mud-shadow); font-size: 1.1rem; margin-bottom: 15px; }
+        /* Cleaned Up Character Rows */
+        .name-entry { 
+            padding: 20px; 
+            background: rgba(255, 255, 255, 0.85); 
+            border-radius: 30px; 
+            border: 3px solid var(--piggy-pink); 
+            margin-bottom: 25px; /* Increased spacing */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .emoji-swiper { display: flex; overflow-x: auto; gap: 12px; padding: 10px 5px; scrollbar-width: none; background: #fff9fb; border-radius: 18px; margin-bottom: 15px; }
+        .char-opt { width: 55px; height: 55px; cursor: pointer; border: 3px solid transparent; border-radius: 15px; flex-shrink: 0; object-fit: cover; transition: 0.2s; }
+        .char-opt.selected { border-color: var(--deep-pink); background: white; transform: scale(1.15); }
         
+        .score-char-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--piggy-pink); }
+        .active-char-img { width: 110px; height: 110px; border-radius: 25px; object-fit: cover; border: 4px solid var(--piggy-pink); margin-bottom: 10px; }
+
+        .p-in { width: 100%; padding: 14px; border: 3px solid #f0f0f0; border-radius: 18px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; background: #fff; }
+        .btn-lets-roll { background: var(--deep-pink); color: var(--white); width: 100%; padding: 22px; border: none; border-radius: 50px; font-family: 'Fredoka One'; cursor: pointer; font-size: 1.6rem; box-shadow: 0 8px 0 var(--pink-shadow); margin-top: 10px; }
         .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button.roll-btn { padding: 16px 5px; border: none; border-radius: 20px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.85rem; position: relative; }
+        button.roll-btn { padding: 18px 5px; border: none; border-radius: 22px; font-family: 'Fredoka One'; cursor: pointer; transition: 0.1s; font-size: 0.9rem; position: relative; }
         .btn-pts { background: rgba(250, 237, 205, 0.9); color: var(--mud-brown); box-shadow: 0 6px 0 var(--tan-shadow); }
-        .btn-dbl { background: var(--piggy-pink); color: var(--white); box-shadow: 0 6px 0 var(--pink-shadow); }
         .btn-risk { grid-column: span 2; background: var(--danger-red); color: var(--white); box-shadow: 0 6px 0 #941b0c; margin-top: 5px; }
         .btn-oink { grid-column: span 2; background: var(--charcoal); color: white; box-shadow: 0 6px 0 #000000; margin-top: 5px; }
-        .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 20px; font-size: 1.3rem; box-shadow: 0 8px 0 #588157; margin-top: 10px; border-radius: 25px; }
+        .btn-save { grid-column: span 2; background: var(--grass-green); color: white; padding: 22px; font-size: 1.4rem; box-shadow: 0 8px 0 #588157; margin-top: 12px; border-radius: 25px; }
         
-        .scoreboard { display: flex; gap: 10px; padding: 10px 0; margin-bottom: 15px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; scrollbar-width: none; }
-        .score-card { background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 20px; min-width: 80px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
+        .scoreboard { display: flex; gap: 12px; padding: 10px 0; margin-bottom: 18px; border-bottom: 4px dashed var(--piggy-pink); overflow-x: auto; }
+        .score-card { background: rgba(255, 255, 255, 0.9); padding: 12px; border-radius: 22px; min-width: 85px; text-align: center; border: 4px solid var(--piggy-pink); flex-shrink: 0; }
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.08); }
-        .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
-        .p-in { width: 100%; padding: 12px; border: 3px solid #eee; border-radius: 15px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; }
     </style>
 </head>
 <body>
-    <div class="audio-toggle" onclick="cycleAudioMode()">
-        <span id="audioIcon">🔊</span>
-        <span id="audioLabel" style="font-size: 0.5rem;">ALL ON</span>
-    </div>
-
     <div id="home-screen">
         <div class="btn-start-container">
             <button class="btn-lets-roll" onclick="showSetup()">Start Game</button>
@@ -88,16 +118,19 @@
     <div class="container hidden" id="main-container">
         <div id="setup">
             <h2 style="text-align:center; font-family:'Fredoka One'; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Player Setup</h2>
-            <input type="number" id="pCount" min="2" max="10" value="2" oninput="drawSetup()" style="display:block; margin:auto; width:80px; text-align:center; padding:10px; border-radius:15px; border:4px solid var(--piggy-pink); font-size: 1.2rem;">
+            
+            <div class="stepper-container">
+                <button class="step-btn" onclick="updatePlayerCount(-1)">❮</button>
+                <div class="player-count-display" id="pDisplay">2</div>
+                <button class="step-btn" onclick="updatePlayerCount(1)">❯</button>
+            </div>
+
             <div id="nameFields" style="margin-top:20px"></div>
             <button class="btn-lets-roll" onclick="initGame()">Let's Roll! 🎲</button>
         </div>
 
         <div id="game" class="hidden">
             <div class="scoreboard" id="sb"></div>
-            <button class="btn-hog-main" onclick="openHogCall()">📢 HOG CALL!</button>
-            <div id="hogIndicator" style="text-align:center; color:var(--white); font-weight:bold; min-height:1.2em; margin-bottom:10px; text-shadow: 1px 1px var(--hog-mud);"></div>
-            
             <div class="turn-area" style="text-align:center;">
                 <div id="activeImgContainer"></div>
                 <h3 id="activeTitle" style="margin:5px 0; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Turn</h3>
@@ -109,101 +142,42 @@
                 <button class="roll-btn btn-pts" onclick="handleRoll(5, 'Razorback')">Razorback (5)</button>
                 <button class="roll-btn btn-pts" onclick="handleRoll(10, 'Snouter')">Snouter (10)</button>
                 <button class="roll-btn btn-pts" onclick="handleRoll(15, 'Jowler')">Jowler (15)</button>
-                <button class="roll-btn btn-dbl" onclick="handleRoll(20, 'Double Trotter')">D-Trot (20)</button>
-                <button class="roll-btn btn-dbl" onclick="handleRoll(40, 'Double Snouter')">D-Snouter (40)</button>
-                <button class="roll-btn btn-dbl" onclick="handleRoll(60, 'Double Jowler')">D-Jowler (60)</button>
+                <button class="roll-btn btn-pts" onclick="handleRoll(20, 'Double')">Double (20)</button>
                 <button class="roll-btn btn-risk" onclick="handleRoll(0, 'PIG OUT')">PIG OUT!</button>
                 <button class="roll-btn btn-oink" onclick="oinker()">OINKER (Back to 0)</button>
                 <button class="roll-btn btn-save" onclick="saveTurn()">Save & End Turn</button>
             </div>
         </div>
-
-        <div id="hogModal" class="custom-modal hidden">
-            <h2 style="color:var(--hog-mud); font-family:'Fredoka One';">📢 HOG CALL!</h2>
-            <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0;"></div>
-            <div class="button-grid" id="hogGuessGrid"></div>
-            <button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button>
-        </div>
-
-        <div id="hogResultModal" class="custom-modal hidden">
-            <h2 id="resultHeader" style="color:var(--deep-pink); font-family:'Fredoka One';">Result</h2>
-            <div id="resultContent" style="font-size:1.2rem; margin:20px 0; font-weight:700;"></div>
-            <button class="btn-lets-roll" onclick="closeResultModal()">Back to Game</button>
-        </div>
     </div>
 
 <script>
-    const audioMode = { ALL: 2, BUTTONS_ONLY: 1, MUTE: 0 };
-    let currentMode = audioMode.ALL;
-    let audioCtx = null;
-    let bgMusic = null;
-
-    // UPDATED NAMING CONVENTION HERE
+    let pCount = 2;
     const characterImages = Array.from({length: 10}, (_, i) => `characters${i+1}.png`);
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds"];
-    const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'Double Trotter',v:20},{n:'Double Snouter',v:40},{n:'Double Jowler',v:60}];
-    let players = [], curIdx = 0, bank = 0, activeHog = null;
+    let players = [], curIdx = 0, bank = 0;
 
-    function initAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (!bgMusic) {
-            bgMusic = new Audio('music.mp3'); 
-            bgMusic.loop = true;
-            bgMusic.volume = 0.2;
-        }
-        applyAudioMode();
+    function updatePlayerCount(val) {
+        pCount = Math.min(Math.max(pCount + val, 2), 10);
+        document.getElementById('pDisplay').innerText = pCount;
+        drawSetup();
     }
-
-    function synthSfx(type) {
-        if (currentMode === audioMode.MUTE || !audioCtx) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        if (type === 'click') {
-            osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(10, now + 0.05);
-            gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-            osc.start(now); osc.stop(now + 0.05);
-        } else if (type === 'snort') {
-            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(80, now); osc.frequency.linearRampToValueAtTime(40, now + 0.2);
-            gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-            osc.start(now); osc.stop(now + 0.2);
-        } else if (type === 'oink') {
-            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now); osc.stop(now + 0.3);
-        }
-    }
-
-    function applyAudioMode() {
-        if (!bgMusic) return;
-        if (currentMode === audioMode.ALL) { bgMusic.play().catch(() => {}); document.getElementById('audioIcon').innerText = "🔊"; document.getElementById('audioLabel').innerText = "ALL ON"; }
-        else if (currentMode === audioMode.BUTTONS_ONLY) { bgMusic.pause(); document.getElementById('audioIcon').innerText = "🔘"; document.getElementById('audioLabel').innerText = "BUTTONS"; }
-        else { bgMusic.pause(); document.getElementById('audioIcon').innerText = "🔇"; document.getElementById('audioLabel').innerText = "MUTE"; }
-    }
-
-    function cycleAudioMode() { if (!audioCtx) initAudio(); currentMode = (currentMode - 1 + 3) % 3; applyAudioMode(); }
 
     function showSetup() { 
-        if (!audioCtx) initAudio(); 
-        synthSfx('click'); 
         document.getElementById('home-screen').classList.add('hidden'); 
         document.getElementById('main-container').classList.remove('hidden'); 
         drawSetup(); 
     }
 
     function drawSetup() {
-        const val = Math.min(Math.max(document.getElementById('pCount').value, 2), 10);
         const container = document.getElementById('nameFields'); 
         container.innerHTML = '';
-        for(let i=0; i<val; i++) {
+        for(let i=0; i<pCount; i++) {
             let swiper = characterImages.map((img, idx) => `<img src="${img}" class="char-opt ${idx === i ? 'selected' : ''}" onclick="selectChar(${i}, ${idx}, this)">`).join('');
             container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-img="${characterImages[i]}" value="${pigNames[i]}"></div>`;
         }
     }
 
     function selectChar(pIdx, eIdx, el) { 
-        synthSfx('click'); 
         const row = document.getElementById(`p-row-${pIdx}`); 
         row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); 
         el.classList.add('selected'); 
@@ -220,27 +194,8 @@
         refresh(); 
     }
 
-    function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { 
-            synthSfx('snort'); bank = 0; activeHog = null; nextTurn(); return; 
-        } 
-        synthSfx('click'); 
-        let gain = v;
-        if(activeHog) {
-            const doubleVal = activeHog.val * 2;
-            if(name === activeHog.guess) {
-                players[activeHog.caller].score += doubleVal; gain -= doubleVal;
-                showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${doubleVal} pts!`);
-            } else {
-                players[activeHog.caller].score -= doubleVal; gain += doubleVal;
-                showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${doubleVal} pts!`);
-            }
-            activeHog = null; document.getElementById('hogIndicator').innerText = '';
-        }
-        bank += gain; refresh(); 
-    }
-
-    function saveTurn() { synthSfx('click'); players[curIdx].score += bank; bank = 0; nextTurn(); }
+    function handleRoll(v, name) { if(name === 'PIG OUT') { bank = 0; nextTurn(); return; } bank += v; refresh(); }
+    function saveTurn() { players[curIdx].score += bank; bank = 0; nextTurn(); }
     function nextTurn() { curIdx = (curIdx + 1) % players.length; refresh(); }
     
     function refresh() {
@@ -255,44 +210,7 @@
             sb.appendChild(card); 
         });
     }
-
-    function openHogCall() {
-        synthSfx('click');
-        const pList = document.getElementById('hogPlayerSelect');
-        pList.innerHTML = ''; let eligible = 0;
-        players.forEach((p, i) => {
-            if(i !== curIdx && p.score >= 20) {
-                pList.innerHTML += `<div class="score-card" id="hpc${i}" onclick="selectHogP(${i})"><div style="font-size:0.6rem;">${p.name}</div><img src="${p.img}" class="score-char-img"></div>`;
-                eligible++;
-            }
-        });
-        if(eligible === 0) return alert("No one else has 20 points yet!");
-        const gList = document.getElementById('hogGuessGrid');
-        gList.innerHTML = '';
-        poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`);
-        document.getElementById('hogModal').classList.remove('hidden');
-        activeHog = { caller: null, guess: null, val: 0 };
-    }
-
-    function selectHogP(idx) {
-        synthSfx('click');
-        document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card'));
-        document.getElementById('hpc' + idx).classList.add('active-card');
-        activeHog.caller = idx;
-    }
-
-    function setHogGuess(name, val) {
-        if(activeHog.caller === null) return alert("Select challenger!");
-        synthSfx('click');
-        activeHog.guess = name; activeHog.val = val;
-        document.getElementById('hogModal').classList.add('hidden');
-        document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`;
-    }
-
-    function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); refresh(); }
-    function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
-    function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
-    function oinker() { synthSfx('oink'); if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } }
+    function oinker() { if(confirm("Oinker! Reset total score?")) { players[curIdx].score = 0; bank = 0; nextTurn(); } }
 </script>
 </body>
 </html>
