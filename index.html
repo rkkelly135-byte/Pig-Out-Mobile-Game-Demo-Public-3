@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -47,10 +47,8 @@
 
         .hidden { display: none !important; }
 
-        /* Floating Settings Button */
         .settings-btn { position: fixed; bottom: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 6000; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--pink-shadow); }
         
-        /* Stylized Setup Arrows */
         .stepper-container { display: flex; align-items: center; justify-content: center; gap: 25px; margin: 20px 0; }
         .step-btn { background: var(--deep-pink); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 var(--pink-shadow); display: flex; align-items: center; justify-content: center; }
         .step-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--pink-shadow); }
@@ -63,12 +61,12 @@
         .char-opt.selected { border-color: var(--deep-pink); transform: scale(1.1); }
         .p-in { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; background: #fff; }
 
-        .scoreboard { display: flex; gap: 8px; padding: 5px 0; margin-bottom: 8px; border-bottom: 3px dashed var(--piggy-pink); overflow-x: auto; position: sticky; top: 0; background: rgba(255,255,255,0.1); border-radius: 15px; z-index: 20; }
-        .score-card { background: rgba(255, 255, 255, 0.95); padding: 4px; border-radius: 12px; min-width: 70px; height: 85px; text-align: center; border: 3px solid var(--piggy-pink); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        /* Updated Scoreboard to Center Cards */
+        .scoreboard { display: flex; gap: 10px; padding: 5px 0; margin-bottom: 8px; border-bottom: 3px dashed var(--piggy-pink); overflow-x: auto; position: sticky; top: 0; background: rgba(255,255,255,0.1); border-radius: 15px; z-index: 20; justify-content: center; }
+        .score-card { background: rgba(255, 255, 255, 0.95); padding: 5px; border-radius: 12px; min-width: 70px; height: 85px; text-align: center; border: 3px solid var(--piggy-pink); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .score-char-img { width: 45px; height: 45px; object-fit: cover; transform: scale(1.15); } 
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.05); }
 
-        /* HUD Math */
         .turn-hud { display: flex; align-items: flex-start; justify-content: center; gap: 15px; margin: 2px 0; }
         .hud-stat { display: flex; flex-direction: column; align-items: center; min-width: 90px; }
         .hud-val { font-family: 'Fredoka One'; font-size: 2.8rem; text-shadow: 2px 2px var(--mud-brown); line-height: 1; }
@@ -88,6 +86,16 @@
 
         .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 12px; border-radius: 15px; font-family: 'Fredoka One'; border: none; margin-bottom: 5px; cursor: pointer; }
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 30px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
+        
+        /* Stylized Toggles for Settings */
+        .control-row { display: flex; justify-content: space-between; align-items: center; margin: 18px 0; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; }
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--deep-pink); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        
         .results-table { width: 100%; border-collapse: collapse; margin: 15px 0; background: #fff9fb; border-radius: 15px; overflow: hidden; border: 2px solid var(--piggy-pink); font-size: 0.7rem; table-layout: fixed; }
         .results-table th { background: var(--piggy-pink); color: white; padding: 6px; font-family: 'Fredoka One'; }
         .results-table td { padding: 5px; border: 1px solid #ffe5ec; font-weight: bold; text-align: center; }
@@ -159,6 +167,22 @@
 
         <div id="audioModal" class="custom-modal hidden">
             <h2 style="color:var(--mud-brown); font-family:'Fredoka One';">Settings</h2>
+            
+            <div class="control-row">
+                <span>Music</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="musicToggle" checked onchange="updateAudioSettings()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span>Sounds</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sfxToggle" checked onchange="updateAudioSettings()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
             <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
                 <button class="btn-lets-roll" style="background:var(--hog-mud); color:white; padding:12px; border-radius:15px; border:none;" onclick="skipSong()">Skip Song ⏭️</button>
                 <button class="btn-lets-roll" style="background:var(--grass-green); color:white; padding:12px; border-radius:15px; border:none;" onclick="replaySamePlayers()">Restart Game</button>
@@ -172,7 +196,7 @@
             <h2 id="winnerName">Winner</h2>
             <div id="winnerImgContainer"></div>
             <div style="overflow-x: auto;"><table class="results-table" id="finalScoreTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody><tfoot id="tableFoot"></tfoot></table></div>
-            <button id="redemptionBtn" class="btn-lets-roll" style="background:var(--hog-mud); width:100%; padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none; margin-bottom:10px;" onclick="startRedemption()">Redemption!</button>
+            <button id="redemptionBtn" class="btn-lets-roll" style="background:var(--hog-mud); width:100%; padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none; margin-bottom:10px;" onclick="startRedemption()">Challenge Redemption!</button>
             <div style="display:flex; gap:10px;">
                 <button class="btn-lets-roll" style="flex:1; background:var(--grass-green); padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none;" onclick="replaySamePlayers()">Replay</button>
                 <button class="btn-lets-roll" style="flex:1; background:var(--deep-pink); padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none;" onclick="playAgain()">New Game</button>
@@ -195,10 +219,23 @@
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trot',v:20},{n:'D-Snout',v:40},{n:'D-Jowl',v:60}];
     let players = [], curIdx = 0, bank = 0, activeHog = null, inRedemption = false;
 
-    function playSfx(key) { const sound = sfx[key]; if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); } }
-    function initAudio() { if (!bgMusic) { bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2; bgMusic.onended = () => skipSong(); } bgMusic.play().catch(() => {}); }
+    // Granular Audio Logic
+    function playSfx(key) { 
+        if (!document.getElementById('sfxToggle').checked) return; 
+        const sound = sfx[key]; 
+        if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); } 
+    }
+    
+    function initAudio() { if (!bgMusic) { bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2; bgMusic.onended = () => skipSong(); } updateAudioSettings(); }
+    
+    function updateAudioSettings() { 
+        if (!bgMusic) return; 
+        if (!document.getElementById('musicToggle').checked) bgMusic.pause(); 
+        else bgMusic.play(); 
+    }
+    
     function toggleAudioModal() { if (!bgMusic) initAudio(); document.getElementById('audioModal').classList.toggle('hidden'); }
-    function skipSong() { musicIndex = (musicIndex + 1) % playlist.length; if (bgMusic) { bgMusic.src = playlist[musicIndex]; bgMusic.play(); } }
+    function skipSong() { musicIndex = (musicIndex + 1) % playlist.length; if (bgMusic) { bgMusic.src = playlist[musicIndex]; if (document.getElementById('musicToggle').checked) bgMusic.play(); } }
     
     function updatePlayerCount(val) { 
         if (val > 0 && pCount < 15) playSfx('pigout'); else if (val < 0 && pCount > 2) playSfx('oinker');
@@ -211,7 +248,7 @@
         document.getElementById('main-container').classList.remove('hidden'); 
         document.getElementById('setup').classList.remove('hidden'); 
         document.getElementById('game').classList.add('hidden');
-        document.getElementById('floatingSettings').classList.add('hidden'); // Hide gear on setup
+        document.getElementById('floatingSettings').classList.add('hidden'); 
         drawSetup(); 
     }
 
@@ -230,7 +267,7 @@
         document.getElementById('redemptionIndicator').classList.add('hidden');
         document.getElementById('setup').classList.add('hidden'); 
         document.getElementById('game').classList.remove('hidden');
-        document.getElementById('floatingSettings').classList.remove('hidden'); // Show gear
+        document.getElementById('floatingSettings').classList.remove('hidden'); 
         document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [], eliminated: false }); }); 
         refresh(); 
     }
@@ -246,7 +283,7 @@
     }
 
     function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { playSfx('pigout'); if(inRedemption) players[curIdx].eliminated = true; players[curIdx].history.push(inRedemption ? "OUT" : 0); bank = 0; activeHog = null; nextTurn(); return; } 
+        if(name === 'PIG OUT') { playSfx('pigout'); if(inRedemption) players[curIdx].eliminated = true; players[curIdx].history.push(inRedemption ? "OUT" : 0); bank = 0; activeHog = null; document.getElementById('hogIndicator').innerText = ''; nextTurn(); return; } 
         playSfx(name.startsWith('D-') ? 'pink' : 'tan');
         let gain = v;
         if(activeHog) {
@@ -262,7 +299,8 @@
     function startRedemption() { inRedemption = true; document.getElementById('winnerModal').classList.add('hidden'); document.getElementById('redemptionIndicator').classList.remove('hidden'); document.getElementById('redemptionBtn').classList.add('hidden'); bank = 0; const leaderIdx = players.indexOf(players.reduce((a, b) => a.score > b.score ? a : b)); curIdx = (leaderIdx + 1) % players.length; refresh(); }
     
     function triggerWin() {
-        playSfx('yeehaw'); const active = players.filter(p => !p.eliminated); const winner = active.length > 0 ? active.reduce((a, b) => a.score > b.score ? a : b) : players[0];
+        playSfx('yeehaw'); const active = players.filter(p => !p.eliminated);
+        const winner = active.length > 0 ? active.reduce((a, b) => a.score > b.score ? a : b) : players[0];
         document.getElementById('winHeader').innerText = inRedemption ? "REDEMPTION WINNER!" : "YEEHAW!";
         document.getElementById('winnerName').innerText = winner.name;
         document.getElementById('winnerImgContainer').innerHTML = `<img src="${winner.img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`;
@@ -293,6 +331,8 @@
             const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''} ${p.eliminated ? 'hidden' : ''}`; 
             card.innerHTML = `<div style="font-size:0.5rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1rem;">${p.score}</div>`; sb.appendChild(card); 
         });
+        // Scoreboard centering fix
+        sb.style.justifyContent = (players.length <= 4) ? 'center' : 'flex-start';
     }
 
     function openHogCall() {
@@ -311,8 +351,6 @@
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
     function oinker() { playSfx('oinker'); if(inRedemption) players[curIdx].eliminated = true; players[curIdx].history.push(inRedemption ? "OUT" : "X"); players[curIdx].score = 0; bank = 0; nextTurn(); }
-    
-    function updateAudioSettings() { if (!bgMusic) return; const isMuted = document.getElementById('muteToggle').checked; const musicOn = document.getElementById('musicToggle').checked; if (isMuted || !musicOn) bgMusic.pause(); else bgMusic.play(); }
 </script>
 </body>
 </html>
