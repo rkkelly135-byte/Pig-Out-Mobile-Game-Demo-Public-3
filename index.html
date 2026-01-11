@@ -47,8 +47,9 @@
 
         .hidden { display: none !important; }
 
-        .audio-btn { position: fixed; top: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 6000; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--pink-shadow); }
-        .control-row { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 15px; }
+        /* Settings Gear Icon */
+        .audio-btn { position: fixed; top: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 6000; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--pink-shadow); }
+        .control-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 15px; }
         
         .stepper-container { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 20px 0; }
         .step-btn { background: var(--piggy-pink); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-family: 'Fredoka One'; cursor: pointer; box-shadow: 0 4px 0 var(--pink-shadow); }
@@ -81,14 +82,14 @@
         .btn-save:disabled { background: #a5a5a5; box-shadow: 0 8px 0 #777; opacity: 0.6; cursor: not-allowed; }
         
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 40px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
-        .results-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); font-size: 0.75rem; table-layout: fixed; }
+        .results-table { width: 100%; border-collapse: collapse; margin: 15px 0; background: #fff9fb; border-radius: 20px; overflow: hidden; border: 3px solid var(--piggy-pink); font-size: 0.75rem; table-layout: fixed; }
         .results-table th { background: var(--piggy-pink); color: white; padding: 8px 4px; font-family: 'Fredoka One'; }
         .results-table td { padding: 6px 2px; border: 1px solid #ffe5ec; font-weight: bold; text-align: center; }
         .total-row { background: var(--star-yellow); color: var(--mud-brown); font-size: 1rem; }
     </style>
 </head>
 <body>
-    <div class="audio-btn" onclick="toggleAudioModal()">🔊</div>
+    <div class="audio-btn" onclick="toggleAudioModal()">⚙️</div>
 
     <div id="home-screen">
         <div class="btn-start-container">
@@ -138,33 +139,29 @@
             <h2 id="winnerName" style="margin-top:0; color:var(--mud-brown);">Winner</h2>
             <div id="winnerImgContainer"></div>
             <div style="overflow-x: auto;"><table class="results-table" id="finalScoreTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody><tfoot id="tableFoot"></tfoot></table></div>
-            <div id="winButtons" style="display:flex; gap:10px;">
+            
+            <button id="redemptionBtn" class="btn-lets-roll" style="background:var(--hog-mud); margin-bottom:10px;" onclick="startRedemption()">Challenge Redemption!</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-lets-roll" style="flex:1; font-size:1rem; background:var(--grass-green); box-shadow:0 8px 0 #588157;" onclick="replaySamePlayers()">Replay</button>
                 <button class="btn-lets-roll" style="flex:1; font-size:1rem;" onclick="playAgain()">New Game</button>
-                <button id="redemptionBtn" class="btn-lets-roll" style="flex:1; font-size:1rem; background:var(--hog-mud);" onclick="startRedemption()">Redemption!</button>
             </div>
         </div>
 
         <div id="audioModal" class="custom-modal hidden">
-            <h2 style="color:var(--mud-brown); font-family:'Fredoka One';">Audio Settings</h2>
+            <h2 style="color:var(--mud-brown); font-family:'Fredoka One';">Settings</h2>
+            
             <div class="control-row"><span>Master Mute</span><input type="checkbox" id="muteToggle" onchange="updateAudioSettings()"></div>
             <div class="control-row"><span>Background Music</span><input type="checkbox" id="musicToggle" checked onchange="updateAudioSettings()"></div>
             <div class="control-row"><span>Button Sounds</span><input type="checkbox" id="sfxToggle" checked onchange="updateAudioSettings()"></div>
-            <button class="btn-lets-roll" style="font-size:1.1rem; padding:15px; margin-top:10px;" onclick="skipSong()">Skip Song ⏭️</button>
-            <button class="btn-lets-roll" style="background:#999; font-size:1.1rem; padding:15px; margin-top:15px;" onclick="toggleAudioModal()">Close</button>
+            
+            <button class="btn-lets-roll" style="font-size:1.1rem; padding:15px; margin-top:5px;" onclick="skipSong()">Skip Song ⏭️</button>
+            <button class="btn-lets-roll" style="background:var(--grass-green); box-shadow:0 8px 0 #588157; font-size:1.1rem; padding:15px; margin-top:5px;" onclick="replaySamePlayers()">Restart Game (Same Players)</button>
+            <button class="btn-lets-roll" style="background:var(--deep-pink); font-size:1.1rem; padding:15px; margin-top:5px;" onclick="playAgain()">Return to Setup</button>
+            <button class="btn-lets-roll" style="background:#999; font-size:1.1rem; padding:15px; margin-top:10px; box-shadow:0 8px 0 #777;" onclick="toggleAudioModal()">Close Settings</button>
         </div>
 
-        <div id="hogModal" class="custom-modal hidden">
-            <h2 style="color:var(--hog-mud); font-family:'Fredoka One';">📢 HOG CALL!</h2>
-            <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0; justify-content: center;"></div>
-            <div class="button-grid" id="hogGuessGrid" style="margin-top:10px;"></div>
-            <button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button>
-        </div>
-
-        <div id="hogResultModal" class="custom-modal hidden">
-            <h2 id="resultHeader" style="color:var(--deep-pink); font-family:'Fredoka One';">Result</h2>
-            <div id="resultContent" style="font-size:1.2rem; margin:20px 0; font-weight:700;"></div>
-            <button class="btn-lets-roll" onclick="closeResultModal()">Back to Game</button>
-        </div>
+        <div id="hogModal" class="custom-modal hidden"><h2 style="color:var(--hog-mud); font-family:'Fredoka One';">📢 HOG CALL!</h2><div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0; justify-content: center;"></div><div class="button-grid" id="hogGuessGrid" style="margin-top:10px;"></div><button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button></div>
+        <div id="hogResultModal" class="custom-modal hidden"><h2 id="resultHeader" style="color:var(--deep-pink); font-family:'Fredoka One';">Result</h2><div id="resultContent" style="font-size:1.2rem; margin:20px 0; font-weight:700;"></div><button class="btn-lets-roll" onclick="closeResultModal()">Back to Game</button></div>
     </div>
 
 <script>
@@ -179,34 +176,27 @@
     const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Madame Snout", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie", "Oinkoncé", "Lord Rinds", "Captain Bacon", "Wild Hog", "Rodeo Rick", "Muddy Buddy", "Piggy Smalls"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trot',v:20},{n:'D-Snout',v:40},{n:'D-Jowl',v:60}];
     
-    let players = [], curIdx = 0, bank = 0, activeHog = null;
-    let inRedemption = false;
+    let players = [], curIdx = 0, bank = 0, activeHog = null, inRedemption = false;
 
+    // --- AUDIO & SETTINGS ---
     function playSfx(key) {
         if (document.getElementById('muteToggle').checked || !document.getElementById('sfxToggle').checked) return;
         const sound = sfx[key]; if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); }
     }
-
-    function initAudio() {
-        if (!bgMusic) { bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2; bgMusic.onended = () => skipSong(); }
-        updateAudioSettings();
-    }
-
+    function initAudio() { if (!bgMusic) { bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2; bgMusic.onended = () => skipSong(); } updateAudioSettings(); }
     function updateAudioSettings() {
         if (!bgMusic) return;
         if (document.getElementById('muteToggle').checked || !document.getElementById('musicToggle').checked) bgMusic.pause();
         else bgMusic.play().catch(() => {});
-        document.querySelector('.audio-btn').innerText = document.getElementById('muteToggle').checked ? "🔇" : "🔊";
     }
-
     function toggleAudioModal() { if (!bgMusic) initAudio(); document.getElementById('audioModal').classList.toggle('hidden'); }
     function skipSong() { musicIndex = (musicIndex + 1) % playlist.length; if (bgMusic) { bgMusic.src = playlist[musicIndex]; updateAudioSettings(); } }
-    
+
+    // --- SETUP ---
     function updatePlayerCount(val) { 
         if (val > 0 && pCount < 15) playSfx('pigout'); else if (val < 0 && pCount > 2) playSfx('oinker');
         pCount = Math.min(Math.max(pCount + val, 2), 15); document.getElementById('pDisplay').innerText = pCount; drawSetup(); 
     }
-
     function showSetup() { initAudio(); playSfx('yeehaw'); document.getElementById('home-screen').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); drawSetup(); }
     function drawSetup() {
         const container = document.getElementById('nameFields'); container.innerHTML = '';
@@ -215,9 +205,9 @@
             container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-img="${characterImages[i]}" value="${pigNames[i]}"></div>`;
         }
     }
-
     function selectChar(pIdx, eIdx, el) { playSfx('tan'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.img = characterImages[eIdx]; }
     
+    // --- GAME START & REPLAY LOGIC ---
     function initGame() { 
         playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; inRedemption = false;
         document.getElementById('redemptionIndicator').classList.add('hidden');
@@ -225,160 +215,100 @@
         document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); 
     }
 
-    // --- UPDATED RESOLUTION LOGIC ---
-    function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { 
-            playSfx('pigout'); 
-            if(inRedemption) players[curIdx].eliminated = true;
-            players[curIdx].history.push(inRedemption ? "OUT" : 0);
-            bank = 0; activeHog = null; document.getElementById('hogIndicator').innerText = ''; nextTurn(); return; 
-        } 
-        
-        playSfx(name.startsWith('D-') ? 'pink' : 'tan');
-        let currentRollGain = v;
-
-        if(activeHog) {
-            const doubleVal = activeHog.val * 2;
-            if(name === activeHog.guess) {
-                players[activeHog.caller].score += doubleVal;
-                players[activeHog.caller].history.push(`+${doubleVal}*`);
-                currentRollGain -= doubleVal; // Guesser takes points from the roller's bank
-                showHogResult("SUCCESS!", `${players[activeHog.caller].name} correctly guessed ${name} and wins ${doubleVal} pts!`);
-            } else {
-                players[activeHog.caller].score -= doubleVal;
-                players[activeHog.caller].history.push(`-${doubleVal}*`);
-                currentRollGain += doubleVal; // roller gets bonus points from the bad guesser
-                showHogResult("FAILED!", `${players[activeHog.caller].name} incorrectly guessed ${activeHog.guess}. Roller gets +${doubleVal} bonus!`);
-            }
-            activeHog = null; 
-            document.getElementById('hogIndicator').innerText = '';
-        }
-        
-        bank += currentRollGain; 
-        if(!inRedemption && players[curIdx].score + bank >= 100) saveTurn();
-        refresh(); 
-    }
-
-    function saveTurn() { 
-        playSfx('save'); players[curIdx].score += bank; players[curIdx].history.push(bank); 
-        if(!inRedemption && players[curIdx].score >= 100) { triggerWin(); return; }
-        bank = 0; nextTurn(); 
-    }
-
-    function startRedemption() {
-        inRedemption = true;
+    function replaySamePlayers() {
+        playSfx('yeehaw');
+        curIdx = 0; bank = 0; inRedemption = false;
+        players.forEach(p => { p.score = 0; p.history = []; p.eliminated = false; });
         document.getElementById('winnerModal').classList.add('hidden');
-        document.getElementById('redemptionIndicator').classList.remove('hidden');
-        document.getElementById('redemptionBtn').classList.add('hidden');
-        bank = 0;
-        const winnerIdx = players.indexOf(players.reduce((prev, curr) => (prev.score > curr.score) ? prev : curr));
-        curIdx = (winnerIdx + 1) % players.length;
+        document.getElementById('audioModal').classList.add('hidden');
+        document.getElementById('redemptionIndicator').classList.add('hidden');
+        document.getElementById('redemptionBtn').classList.remove('hidden');
+        document.getElementById('game').classList.remove('hidden');
         refresh();
     }
 
+    // --- GAMEPLAY LOGIC ---
+    function handleRoll(v, name) { 
+        if(name === 'PIG OUT') { 
+            playSfx('pigout'); if(inRedemption) players[curIdx].eliminated = true;
+            players[curIdx].history.push(inRedemption ? "OUT" : 0);
+            bank = 0; activeHog = null; document.getElementById('hogIndicator').innerText = ''; nextTurn(); return; 
+        } 
+        playSfx(name.startsWith('D-') ? 'pink' : 'tan');
+        let gain = v;
+        if(activeHog) {
+            const dv = activeHog.val * 2;
+            if(name === activeHog.guess) { players[activeHog.caller].score += dv; players[activeHog.caller].history.push(`+${dv}*`); gain -= dv; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${dv} pts!`); }
+            else { players[activeHog.caller].score -= dv; players[activeHog.caller].history.push(`-${dv}*`); gain += dv; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${dv} pts!`); }
+            activeHog = null; document.getElementById('hogIndicator').innerText = '';
+        }
+        bank += gain; if(!inRedemption && players[curIdx].score + bank >= 100) saveTurn();
+        refresh(); 
+    }
+
+    function saveTurn() { playSfx('save'); players[curIdx].score += bank; players[curIdx].history.push(bank); if(!inRedemption && players[curIdx].score >= 100) { triggerWin(); return; } bank = 0; nextTurn(); }
+
+    function startRedemption() {
+        inRedemption = true; document.getElementById('winnerModal').classList.add('hidden');
+        document.getElementById('redemptionIndicator').classList.remove('hidden');
+        document.getElementById('redemptionBtn').classList.add('hidden');
+        bank = 0; const leaderIdx = players.indexOf(players.reduce((a, b) => a.score > b.score ? a : b));
+        curIdx = (leaderIdx + 1) % players.length; refresh();
+    }
+
     function triggerWin() {
-        playSfx('yeehaw');
-        const remaining = players.filter(p => !p.eliminated);
-        const winner = remaining.length > 0 ? remaining.reduce((prev, curr) => (prev.score > curr.score) ? prev : curr) : players[0];
-        
+        playSfx('yeehaw'); const active = players.filter(p => !p.eliminated);
+        const winner = active.length > 0 ? active.reduce((a, b) => a.score > b.score ? a : b) : players[0];
         document.getElementById('winHeader').innerText = inRedemption ? "REDEMPTION WINNER!" : "YEEHAW!";
         document.getElementById('winnerName').innerText = winner.name;
         document.getElementById('winnerImgContainer').innerHTML = `<img src="${winner.img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`;
-        
         const head = document.getElementById('tableHead'), body = document.getElementById('tableBody'), foot = document.getElementById('tableFoot');
         head.innerHTML = '<tr><th>Round</th>' + players.map(p => `<th><img src="${p.img}" style="width:20px;"><br>${p.name}</th>`).join('') + '</tr>';
-        const maxRounds = Math.max(...players.map(p => p.history.length));
-        body.innerHTML = '';
+        const maxRounds = Math.max(...players.map(p => p.history.length)); body.innerHTML = '';
         for (let r = 0; r < maxRounds; r++) {
-            let row = `<tr><td>${r + 1}</td>`;
-            players.forEach(p => { row += `<td>${p.history[r] !== undefined ? p.history[r] : '-'}</td>`; });
-            body.innerHTML += row + '</tr>';
+            let row = `<tr><td>${r + 1}</td>`; players.forEach(p => { row += `<td>${p.history[r] !== undefined ? p.history[r] : '-'}</td>`; }); body.innerHTML += row + '</tr>';
         }
         foot.innerHTML = `<tr class="total-row"><td>Total</td>${players.map(p => `<td>${p.score}</td>`).join('')}</tr>`;
         document.getElementById('winnerModal').classList.remove('hidden');
     }
 
     function playAgain() { playSfx('yeehaw'); location.reload(); }
-    
     function nextTurn() { 
-        let startingIdx = curIdx;
-        do { curIdx = (curIdx + 1) % players.length; } while (players[curIdx].eliminated && players.filter(p => !p.eliminated).length > 0);
-        
-        if(inRedemption) {
-            const active = players.filter(p => !p.eliminated);
-            if(active.length === 1) { triggerWin(); return; }
-        }
-        refresh(); 
+        let sIdx = curIdx; do { curIdx = (curIdx + 1) % players.length; } while (players[curIdx].eliminated && players.filter(p => !p.eliminated).length > 0);
+        if(inRedemption && players.filter(p => !p.eliminated).length === 1) { triggerWin(); return; } refresh(); 
     }
     
     function refresh() {
         document.getElementById('bank').innerText = bank;
-        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
         document.getElementById('activeImgContainer').innerHTML = `<img src="${players[curIdx].img}" class="active-char-img">`;
-        
+        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
         if(inRedemption) {
-            const maxScore = Math.max(...players.map(p => p.score));
-            document.getElementById('saveBtn').disabled = (players[curIdx].score + bank <= maxScore);
-        } else {
-            document.getElementById('saveBtn').disabled = false;
-        }
-
+            const maxS = Math.max(...players.map(p => p.score));
+            document.getElementById('saveBtn').disabled = (players[curIdx].score + bank <= maxS);
+        } else { document.getElementById('saveBtn').disabled = false; }
         const sb = document.getElementById('sb'); sb.innerHTML = '';
         players.forEach((p, i) => { 
             const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''} ${p.eliminated ? 'hidden' : ''}`; 
-            card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1.1rem;">${p.score}</div>`; 
-            sb.appendChild(card); 
+            card.innerHTML = `<div style="font-size:0.6rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1.1rem;">${p.score}</div>`; sb.appendChild(card); 
         });
     }
 
     function openHogCall() {
-        playSfx('hog');
-        const pList = document.getElementById('hogPlayerSelect');
-        pList.innerHTML = ''; 
-        let eligibleCount = 0;
-        players.forEach((p, i) => {
-            if(i !== curIdx && p.score >= 20 && !p.eliminated) {
-                pList.innerHTML += `<div class="score-card" id="hpc${i}" onclick="selectHogP(${i})" style="cursor:pointer; height: 85px;">
-                    <div style="font-size:0.5rem; font-weight:700;">${p.name}</div>
-                    <img src="${p.img}" class="score-char-img" style="width:40px; height:40px;">
-                    <div style="font-size:0.9rem;">${p.score}</div>
-                </div>`;
-                eligibleCount++;
-            }
-        });
-        if(eligibleCount === 0) { alert("No non-eliminated opponents have 20 points yet!"); return; }
-        const gList = document.getElementById('hogGuessGrid');
-        gList.innerHTML = '';
+        playSfx('hog'); const pList = document.getElementById('hogPlayerSelect'); pList.innerHTML = ''; let count = 0;
+        players.forEach((p, i) => { if(i !== curIdx && p.score >= 20 && !p.eliminated) {
+            pList.innerHTML += `<div class="score-card" onclick="selectHogP(${i})" id="hpc${i}" style="cursor:pointer;"><div style="font-size:0.5rem;">${p.name}</div><img src="${p.img}" class="score-char-img"></div>`; count++;
+        }});
+        if(count === 0) return alert("No opponents with 20+ pts!");
+        const gList = document.getElementById('hogGuessGrid'); gList.innerHTML = '';
         poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`);
-        document.getElementById('hogModal').classList.remove('hidden');
-        activeHog = { caller: null, guess: null, val: 0 };
+        document.getElementById('hogModal').classList.remove('hidden'); activeHog = { caller: null, guess: null, val: 0 };
     }
-
-    function selectHogP(idx) {
-        playSfx('tan');
-        document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card'));
-        document.getElementById('hpc' + idx).classList.add('active-card');
-        activeHog.caller = idx;
-    }
-
-    function setHogGuess(name, val) {
-        if(activeHog.caller === null) return alert("Select challenger first!");
-        playSfx('tan');
-        activeHog.guess = name; activeHog.val = val;
-        document.getElementById('hogModal').classList.add('hidden');
-        document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`;
-    }
-
+    function selectHogP(i) { playSfx('tan'); document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card')); document.getElementById('hpc' + i).classList.add('active-card'); activeHog.caller = i; }
+    function setHogGuess(n, v) { if(activeHog.caller === null) return alert("Select challenger!"); playSfx('tan'); activeHog.guess = n; activeHog.val = v; document.getElementById('hogModal').classList.add('hidden'); document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${n}!`; }
     function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); }
     function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
     function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
-    
-    function oinker() { 
-        playSfx('oinker'); 
-        if(inRedemption) players[curIdx].eliminated = true;
-        players[curIdx].history.push(inRedemption ? "OUT" : "X");
-        players[curIdx].score = 0; bank = 0; nextTurn(); 
-    }
+    function oinker() { playSfx('oinker'); if(inRedemption) players[curIdx].eliminated = true; players[curIdx].history.push(inRedemption ? "OUT" : "X"); players[curIdx].score = 0; bank = 0; nextTurn(); }
 </script>
 </body>
 </html>
