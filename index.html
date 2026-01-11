@@ -155,7 +155,6 @@
 
         <div id="hogModal" class="custom-modal hidden">
             <h2 style="color:var(--hog-mud); font-family:'Fredoka One';">📢 HOG CALL!</h2>
-            <p style="font-size:0.8rem; margin-bottom:5px;">Select a challenger with 20+ points:</p>
             <div id="hogPlayerSelect" style="display:flex; gap:10px; overflow-x:auto; padding:10px 0; justify-content: center;"></div>
             <div class="button-grid" id="hogGuessGrid" style="margin-top:10px;"></div>
             <button class="roll-btn" style="background:#999; color:white; margin-top:20px; width:100%" onclick="closeHogCall()">Cancel</button>
@@ -226,15 +225,36 @@
         document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); refresh(); 
     }
 
+    // --- UPDATED RESOLUTION LOGIC ---
     function handleRoll(v, name) { 
         if(name === 'PIG OUT') { 
             playSfx('pigout'); 
             if(inRedemption) players[curIdx].eliminated = true;
             players[curIdx].history.push(inRedemption ? "OUT" : 0);
-            bank = 0; activeHog = null; nextTurn(); return; 
+            bank = 0; activeHog = null; document.getElementById('hogIndicator').innerText = ''; nextTurn(); return; 
         } 
+        
         playSfx(name.startsWith('D-') ? 'pink' : 'tan');
-        bank += v;
+        let currentRollGain = v;
+
+        if(activeHog) {
+            const doubleVal = activeHog.val * 2;
+            if(name === activeHog.guess) {
+                players[activeHog.caller].score += doubleVal;
+                players[activeHog.caller].history.push(`+${doubleVal}*`);
+                currentRollGain -= doubleVal; // Guesser takes points from the roller's bank
+                showHogResult("SUCCESS!", `${players[activeHog.caller].name} correctly guessed ${name} and wins ${doubleVal} pts!`);
+            } else {
+                players[activeHog.caller].score -= doubleVal;
+                players[activeHog.caller].history.push(`-${doubleVal}*`);
+                currentRollGain += doubleVal; // roller gets bonus points from the bad guesser
+                showHogResult("FAILED!", `${players[activeHog.caller].name} incorrectly guessed ${activeHog.guess}. Roller gets +${doubleVal} bonus!`);
+            }
+            activeHog = null; 
+            document.getElementById('hogIndicator').innerText = '';
+        }
+        
+        bank += currentRollGain; 
         if(!inRedemption && players[curIdx].score + bank >= 100) saveTurn();
         refresh(); 
     }
@@ -251,7 +271,7 @@
         document.getElementById('redemptionIndicator').classList.remove('hidden');
         document.getElementById('redemptionBtn').classList.add('hidden');
         bank = 0;
-        const winnerIdx = players.indexOf(players.reduce((prev, current) => (prev.score > current.score) ? prev : current));
+        const winnerIdx = players.indexOf(players.reduce((prev, curr) => (prev.score > curr.score) ? prev : curr));
         curIdx = (winnerIdx + 1) % players.length;
         refresh();
     }
@@ -311,15 +331,12 @@
         });
     }
 
-    // --- RE-IMPLEMENTED HOG CALL LOGIC ---
     function openHogCall() {
         playSfx('hog');
         const pList = document.getElementById('hogPlayerSelect');
         pList.innerHTML = ''; 
         let eligibleCount = 0;
-        
         players.forEach((p, i) => {
-            // Must be someone else, must have 20+ points, and must not be eliminated
             if(i !== curIdx && p.score >= 20 && !p.eliminated) {
                 pList.innerHTML += `<div class="score-card" id="hpc${i}" onclick="selectHogP(${i})" style="cursor:pointer; height: 85px;">
                     <div style="font-size:0.5rem; font-weight:700;">${p.name}</div>
@@ -329,16 +346,10 @@
                 eligibleCount++;
             }
         });
-
-        if(eligibleCount === 0) {
-            alert("No non-eliminated opponents have 20 points yet!");
-            return;
-        }
-
+        if(eligibleCount === 0) { alert("No non-eliminated opponents have 20 points yet!"); return; }
         const gList = document.getElementById('hogGuessGrid');
         gList.innerHTML = '';
         poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`);
-        
         document.getElementById('hogModal').classList.remove('hidden');
         activeHog = { caller: null, guess: null, val: 0 };
     }
@@ -353,35 +364,20 @@
     function setHogGuess(name, val) {
         if(activeHog.caller === null) return alert("Select challenger first!");
         playSfx('tan');
-        activeHog.guess = name; 
-        activeHog.val = val;
+        activeHog.guess = name; activeHog.val = val;
         document.getElementById('hogModal').classList.add('hidden');
         document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${name}!`;
     }
 
-    function closeHogCall() { 
-        activeHog = null; 
-        document.getElementById('hogIndicator').innerText = ''; 
-        document.getElementById('hogModal').classList.add('hidden'); 
-    }
-
-    function showHogResult(h, c) { 
-        document.getElementById('resultHeader').innerText = h; 
-        document.getElementById('resultContent').innerHTML = c; 
-        document.getElementById('hogResultModal').classList.remove('hidden'); 
-    }
-
-    function closeResultModal() { 
-        document.getElementById('hogResultModal').classList.add('hidden'); 
-    }
+    function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); }
+    function showHogResult(h, c) { document.getElementById('resultHeader').innerText = h; document.getElementById('resultContent').innerHTML = c; document.getElementById('hogResultModal').classList.remove('hidden'); }
+    function closeResultModal() { document.getElementById('hogResultModal').classList.add('hidden'); }
     
     function oinker() { 
         playSfx('oinker'); 
         if(inRedemption) players[curIdx].eliminated = true;
         players[curIdx].history.push(inRedemption ? "OUT" : "X");
-        players[curIdx].score = 0; 
-        bank = 0; 
-        nextTurn(); 
+        players[curIdx].score = 0; bank = 0; nextTurn(); 
     }
 </script>
 </body>
