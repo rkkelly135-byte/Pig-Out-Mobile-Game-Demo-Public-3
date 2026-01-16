@@ -25,7 +25,7 @@
             margin: 0; padding: 0; color: var(--mud-brown); 
             -webkit-user-select: none; user-select: none; touch-action: manipulation;
             background: url('background2.png') no-repeat center center fixed;
-            background-size: cover; min-height: 100dvh;
+            background-size: cover; height: 100dvh; display: flex; flex-direction: column;
         }
         
         #home-screen { 
@@ -37,68 +37,60 @@
         }
 
         .container { 
-            max-width: 450px; margin: 10px auto; 
+            max-width: 450px; margin: 0 auto; 
             background: rgba(255, 255, 255, 0.3); padding: 15px; 
             border-radius: 30px; border: 2px solid var(--piggy-pink); 
             box-shadow: 0 8px 32px rgba(0,0,0,0.1); position: relative; 
-            min-height: 92vh; z-index: 10;
+            height: 96vh; z-index: 10;
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; flex-direction: column; justify-content: space-between;
         }
 
         .hidden { display: none !important; }
+        .settings-btn { position: fixed; bottom: 15px; right: 15px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 6000; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 var(--pink-shadow); }
 
-        .settings-btn { position: fixed; bottom: 20px; right: 20px; background: var(--white); border: 3px solid var(--piggy-pink); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 6000; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--pink-shadow); }
-        
-        .stepper-container { display: flex; align-items: center; justify-content: center; gap: 25px; margin: 20px 0; }
-        .step-btn { background: var(--deep-pink); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 var(--pink-shadow); display: flex; align-items: center; justify-content: center; }
-        .step-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--pink-shadow); }
-        .player-count-display { font-family: 'Fredoka One'; font-size: 3rem; color: var(--deep-pink); text-shadow: 2px 2px var(--white); min-width: 60px; text-align: center; }
-
-        .setup-scroll-area { max-height: 55vh; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; }
-        .name-entry { padding: 15px; background: rgba(255, 255, 255, 0.85); border-radius: 20px; border: 2px solid var(--piggy-pink); margin-bottom: 15px; }
-        .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; scrollbar-width: none; background: #fff9fb; border-radius: 15px; margin-bottom: 10px; }
-        .char-opt { width: 60px; height: 60px; cursor: pointer; border-bottom: 4px solid transparent; flex-shrink: 0; object-fit: contain; }
-        .char-opt.selected { border-color: var(--deep-pink); transform: scale(1.1); }
-        .p-in { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 12px; font-family: inherit; font-weight: 700; box-sizing: border-box; font-size: 16px; background: #fff; }
-
-        /* Updated Scoreboard to Center Cards */
-        .scoreboard { display: flex; gap: 10px; padding: 5px 0; margin-bottom: 8px; border-bottom: 3px dashed var(--piggy-pink); overflow-x: auto; position: sticky; top: 0; background: rgba(255,255,255,0.1); border-radius: 15px; z-index: 20; justify-content: center; }
-        .score-card { background: rgba(255, 255, 255, 0.95); padding: 5px; border-radius: 12px; min-width: 70px; height: 85px; text-align: center; border: 3px solid var(--piggy-pink); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        /* Multi-row Adaptive Scoreboard */
+        .scoreboard { 
+            display: flex; gap: 8px; padding: 5px 0; margin-bottom: 5px; 
+            border-bottom: 3px dashed var(--piggy-pink); 
+            background: rgba(255,255,255,0.1); border-radius: 15px; 
+            flex-wrap: wrap; justify-content: center; /* Creates rows for >4 players */
+        }
+        .score-card { background: rgba(255, 255, 255, 0.95); padding: 4px; border-radius: 12px; min-width: 75px; height: 85px; text-align: center; border: 3px solid var(--piggy-pink); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .score-char-img { width: 45px; height: 45px; object-fit: cover; transform: scale(1.15); } 
         .active-card { background: var(--star-yellow); border-color: var(--mud-brown); transform: scale(1.05); }
 
-        .turn-hud { display: flex; align-items: flex-start; justify-content: center; gap: 15px; margin: 2px 0; }
+        /* HUD Section centered vertically */
+        .turn-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .turn-hud { display: flex; align-items: flex-start; justify-content: center; gap: 15px; margin: 10px 0; }
         .hud-stat { display: flex; flex-direction: column; align-items: center; min-width: 90px; }
-        .hud-val { font-family: 'Fredoka One'; font-size: 2.8rem; text-shadow: 2px 2px var(--mud-brown); line-height: 1; }
-        .hud-label { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; margin-top: 2px; color: var(--white); text-shadow: 1px 1px var(--mud-brown); }
+        .hud-val { font-family: 'Fredoka One'; font-size: 3rem; text-shadow: 2px 2px var(--mud-brown); line-height: 1; }
+        .hud-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; color: var(--white); text-shadow: 1px 1px var(--mud-brown); text-align: center; }
         .bank-pink { color: var(--piggy-pink); }
         .total-green { color: var(--grass-green); }
-        .active-char-img { width: 85px; height: 85px; object-fit: contain; }
+        .active-char-img { width: 100px; height: 100px; object-fit: contain; }
 
-        .button-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px; }
-        .grid-col { display: flex; flex-direction: column; gap: 8px; }
-        button.roll-btn { padding: 14px 2px; border: none; border-radius: 15px; font-family: 'Fredoka One'; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
+        /* Bottom Pinned Grid */
+        .button-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 5px; }
+        .grid-col { display: flex; flex-direction: column; gap: 10px; }
+        button.roll-btn { padding: 18px 2px; border: none; border-radius: 15px; font-family: 'Fredoka One'; cursor: pointer; font-size: 0.9rem; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
         .btn-pts { background: rgba(250, 237, 205, 0.95); color: var(--mud-brown); box-shadow: 0 4px 0 var(--tan-shadow); }
         .btn-dbl { background: var(--piggy-pink); color: var(--white); box-shadow: 0 4px 0 var(--pink-shadow); }
         .btn-risk { background: var(--danger-red); color: var(--white); box-shadow: 0 4px 0 #941b0c; }
         .btn-oink { background: var(--charcoal); color: white; box-shadow: 0 4px 0 #000000; }
-        .btn-save { background: var(--grass-green); color: white; box-shadow: 0 4px 0 #588157; flex-grow: 1; font-size: 1rem; }
+        .btn-save { background: var(--grass-green); color: white; box-shadow: 0 4px 0 #588157; flex-grow: 1; font-size: 1.1rem; }
 
-        .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 12px; border-radius: 15px; font-family: 'Fredoka One'; border: none; margin-bottom: 5px; cursor: pointer; }
+        .btn-hog-main { background: var(--hog-mud); color: var(--white); width: 100%; padding: 14px; border-radius: 15px; font-family: 'Fredoka One'; border: none; cursor: pointer; }
         .custom-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border-radius: 30px; padding: 25px; box-sizing: border-box; z-index: 1000; border: 8px solid var(--mud-brown); text-align: center; overflow-y: auto; }
         
-        /* Stylized Toggles for Settings */
-        .control-row { display: flex; justify-content: space-between; align-items: center; margin: 18px 0; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; }
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--deep-pink); }
-        input:checked + .slider:before { transform: translateX(24px); }
-        
-        .results-table { width: 100%; border-collapse: collapse; margin: 15px 0; background: #fff9fb; border-radius: 15px; overflow: hidden; border: 2px solid var(--piggy-pink); font-size: 0.7rem; table-layout: fixed; }
-        .results-table th { background: var(--piggy-pink); color: white; padding: 6px; font-family: 'Fredoka One'; }
-        .results-table td { padding: 5px; border: 1px solid #ffe5ec; font-weight: bold; text-align: center; }
+        /* Setup Specifics */
+        .setup-scroll-area { max-height: 58vh; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; width: 100%; }
+        .name-entry { padding: 12px; background: rgba(255, 255, 255, 0.85); border-radius: 20px; border: 2px solid var(--piggy-pink); margin-bottom: 12px; }
+        .emoji-swiper { display: flex; overflow-x: auto; gap: 10px; padding: 8px; background: #fff9fb; border-radius: 15px; margin-bottom: 10px; }
+        .char-opt { width: 55px; height: 55px; cursor: pointer; flex-shrink: 0; border-bottom: 4px solid transparent; }
+        .char-opt.selected { border-color: var(--deep-pink); transform: scale(1.1); }
+
+        .step-btn { background: var(--deep-pink); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 var(--pink-shadow); }
     </style>
 </head>
 <body>
@@ -106,30 +98,30 @@
 
     <div id="home-screen">
         <div class="btn-start-container">
-            <button class="btn-lets-roll" style="background:var(--deep-pink); color:white; width:100%; padding:20px; border-radius:50px; font-family:'Fredoka One'; font-size:1.5rem; border:none; box-shadow:0 8px 0 var(--pink-shadow);" onclick="showSetup()">Start Game</button>
+            <button class="btn-lets-roll" style="background:var(--deep-pink); color:white; width:90%; margin: 0 5%; padding:20px; border-radius:50px; font-family:'Fredoka One'; font-size:1.5rem; border:none; box-shadow:0 8px 0 var(--pink-shadow);" onclick="showSetup()">Start Game</button>
         </div>
     </div>
 
     <div class="container hidden" id="main-container">
-        <div id="setup">
-            <h2 style="text-align:center; font-family:'Fredoka One'; color: var(--white); text-shadow: 2px 2px var(--mud-brown);">Player Setup</h2>
+        <div id="setup" style="display:flex; flex-direction:column; height:100%;">
+            <h2 style="text-align:center; font-family:'Fredoka One'; color: var(--white); text-shadow: 2px 2px var(--mud-brown); margin: 10px 0;">Player Setup</h2>
             <div class="stepper-container">
                 <button class="step-btn" onclick="updatePlayerCount(-1)">❮</button>
                 <div class="player-count-display" id="pDisplay">2</div>
                 <button class="step-btn" onclick="updatePlayerCount(1)">❯</button>
             </div>
             <div class="setup-scroll-area" id="nameFields"></div>
-            <button class="btn-lets-roll" style="background:var(--deep-pink); color:white; width:100%; padding:15px; border-radius:50px; font-family:'Fredoka One'; border:none; box-shadow:0 6px 0 var(--pink-shadow);" onclick="initGame()">Let's Roll! 🎲</button>
+            <button class="btn-lets-roll" style="background:var(--deep-pink); color:white; width:100%; padding:18px; border-radius:50px; font-family:'Fredoka One'; border:none; box-shadow:0 6px 0 var(--pink-shadow); margin-top: auto;" onclick="initGame()">Let's Roll! 🎲</button>
         </div>
 
-        <div id="game" class="hidden">
+        <div id="game" class="hidden" style="display:flex; flex-direction:column; height:100%;">
             <div class="scoreboard" id="sb"></div>
             <button class="btn-hog-main" onclick="openHogCall()">📢 HOG CALL!</button>
-            <div id="hogIndicator" style="text-align:center; color:var(--white); font-weight:bold; font-size:0.7rem; min-height:1em;"></div>
+            <div id="hogIndicator" style="text-align:center; color:var(--white); font-weight:bold; font-size:0.7rem; min-height:1em; margin-bottom:2px;"></div>
             
             <div class="turn-area">
-                <h3 id="activeTitle" style="margin:0 0 2px 0; text-align:center; color: var(--white); text-shadow: 1px 1px var(--mud-brown); font-size: 0.9rem;">Turn</h3>
-                <div id="redemptionIndicator" class="hidden" style="color:var(--danger-red); font-weight:bold; font-size:0.7rem; text-align:center; margin-bottom:2px;">🔥 REDEMPTION MODE!</div>
+                <h3 id="activeTitle" style="margin:0; text-align:center; color: var(--white); text-shadow: 1px 1px var(--mud-brown); font-size: 1rem;">Turn</h3>
+                <div id="redemptionIndicator" class="hidden" style="color:var(--danger-red); font-weight:bold; font-size:0.7rem; text-align:center;">🔥 REDEMPTION MODE!</div>
                 
                 <div class="turn-hud">
                     <div class="hud-stat">
@@ -167,36 +159,20 @@
 
         <div id="audioModal" class="custom-modal hidden">
             <h2 style="color:var(--mud-brown); font-family:'Fredoka One';">Settings</h2>
-            
-            <div class="control-row">
-                <span>Music</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="musicToggle" checked onchange="updateAudioSettings()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="control-row">
-                <span>Sounds</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="sfxToggle" checked onchange="updateAudioSettings()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
-                <button class="btn-lets-roll" style="background:var(--hog-mud); color:white; padding:12px; border-radius:15px; border:none;" onclick="skipSong()">Skip Song ⏭️</button>
-                <button class="btn-lets-roll" style="background:var(--grass-green); color:white; padding:12px; border-radius:15px; border:none;" onclick="replaySamePlayers()">Restart Game</button>
-                <button class="btn-lets-roll" style="background:var(--deep-pink); color:white; padding:12px; border-radius:15px; border:none;" onclick="playAgain()">New Game</button>
-                <button class="btn-lets-roll" style="background:#999; color:white; padding:12px; border-radius:15px; border:none;" onclick="toggleAudioModal()">Close</button>
+            <div style="display:flex; flex-direction:column; gap:15px; margin-top:20px;">
+                <button class="btn-lets-roll" style="background:var(--hog-mud); color:white; padding:15px; border-radius:15px; border:none;" onclick="skipSong()">Skip Song ⏭️</button>
+                <button class="btn-lets-roll" style="background:var(--grass-green); color:white; padding:15px; border-radius:15px; border:none;" onclick="replaySamePlayers()">Restart Game</button>
+                <button class="btn-lets-roll" style="background:var(--deep-pink); color:white; padding:15px; border-radius:15px; border:none;" onclick="playAgain()">New Game</button>
+                <button class="btn-lets-roll" style="background:#999; color:white; padding:15px; border-radius:15px; border:none;" onclick="toggleAudioModal()">Close</button>
             </div>
         </div>
 
         <div id="winnerModal" class="custom-modal hidden">
-            <h1 id="winHeader" style="color:var(--deep-pink); font-family:'Fredoka One';">YEEHAW!</h1>
-            <h2 id="winnerName">Winner</h2>
+            <h1 id="winHeader" style="color:var(--deep-pink); font-family:'Fredoka One'; font-size:2rem; margin-bottom:0;">YEEHAW!</h1>
+            <h2 id="winnerName" style="margin-top:0; color:var(--mud-brown);">Winner</h2>
             <div id="winnerImgContainer"></div>
             <div style="overflow-x: auto;"><table class="results-table" id="finalScoreTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody><tfoot id="tableFoot"></tfoot></table></div>
-            <button id="redemptionBtn" class="btn-lets-roll" style="background:var(--hog-mud); width:100%; padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none; margin-bottom:10px;" onclick="startRedemption()">Challenge Redemption!</button>
+            <button id="redemptionBtn" class="btn-lets-roll" style="background:var(--hog-mud); width:100%; padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none; margin-bottom:10px;" onclick="startRedemption()">Redemption!</button>
             <div style="display:flex; gap:10px;">
                 <button class="btn-lets-roll" style="flex:1; background:var(--grass-green); padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none;" onclick="replaySamePlayers()">Replay</button>
                 <button class="btn-lets-roll" style="flex:1; background:var(--deep-pink); padding:15px; border-radius:20px; color:white; font-family:'Fredoka One'; border:none;" onclick="playAgain()">New Game</button>
@@ -215,136 +191,28 @@
         oinker: new Audio('oinker.wav'), save: new Audio('coin2.mp3'), yeehaw: new Audio('yeehaw.mp3'), hog: new Audio('sooeey.m4a')
     };
     const characterImages = Array.from({length: 15}, (_, i) => `charactersclean${i+1}.png`);
-    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Wizard Snout", "Detective Swine", "Snout", "Lord Rinds", "Captain Bacon", "Muddy Buddy", "Wild Hog", "Piggy Smalls", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie"];
+    const pigNames = ["Sir Oinksalot", "Truffle Shuffle", "Ham Solo", "Wizard Snout", "Snout", "Snout", "Lord Rinds", "Captain Bacon", "Muddy Buddy", "Wild Hog", "Piggy Smalls", "Baconator", "Pinky Stardust", "Detective Swine", "Mudpie"];
     const poses = [{n:'Sider',v:1},{n:'Trotter',v:5},{n:'Razorback',v:5},{n:'Snouter',v:10},{n:'Jowler',v:15},{n:'D-Trot',v:20},{n:'D-Snout',v:40},{n:'D-Jowl',v:60}];
     let players = [], curIdx = 0, bank = 0, activeHog = null, inRedemption = false;
 
-    // Granular Audio Logic
-    function playSfx(key) { 
-        if (!document.getElementById('sfxToggle').checked) return; 
-        const sound = sfx[key]; 
-        if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); } 
-    }
-    
-    function initAudio() { if (!bgMusic) { bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2; bgMusic.onended = () => skipSong(); } updateAudioSettings(); }
-    
-    function updateAudioSettings() { 
-        if (!bgMusic) return; 
-        if (!document.getElementById('musicToggle').checked) bgMusic.pause(); 
-        else bgMusic.play(); 
-    }
-    
+    function playSfx(key) { const sound = sfx[key]; if (sound) { sound.currentTime = 0; sound.play().catch(() => {}); } }
+    function initAudio() { if (!bgMusic) { bgMusic = new Audio(playlist[musicIndex]); bgMusic.volume = 0.2; bgMusic.onended = () => skipSong(); } bgMusic.play().catch(() => {}); }
     function toggleAudioModal() { if (!bgMusic) initAudio(); document.getElementById('audioModal').classList.toggle('hidden'); }
-    function skipSong() { musicIndex = (musicIndex + 1) % playlist.length; if (bgMusic) { bgMusic.src = playlist[musicIndex]; if (document.getElementById('musicToggle').checked) bgMusic.play(); } }
-    
-    function updatePlayerCount(val) { 
-        if (val > 0 && pCount < 15) playSfx('pigout'); else if (val < 0 && pCount > 2) playSfx('oinker');
-        pCount = Math.min(Math.max(pCount + val, 2), 15); document.getElementById('pDisplay').innerText = pCount; drawSetup(); 
-    }
-
-    function showSetup() { 
-        initAudio(); playSfx('yeehaw'); 
-        document.getElementById('home-screen').classList.add('hidden'); 
-        document.getElementById('main-container').classList.remove('hidden'); 
-        document.getElementById('setup').classList.remove('hidden'); 
-        document.getElementById('game').classList.add('hidden');
-        document.getElementById('floatingSettings').classList.add('hidden'); 
-        drawSetup(); 
-    }
-
-    function drawSetup() {
-        const container = document.getElementById('nameFields'); container.innerHTML = '';
-        for(let i=0; i<pCount; i++) {
-            let swiper = characterImages.map((img, idx) => `<img src="${img}" class="char-opt ${idx === i ? 'selected' : ''}" onclick="selectChar(${i}, ${idx}, this)">`).join('');
-            container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-img="${characterImages[i]}" value="${pigNames[i % pigNames.length]}"></div>`;
-        }
-    }
-
+    function skipSong() { musicIndex = (musicIndex + 1) % playlist.length; if (bgMusic) { bgMusic.src = playlist[musicIndex]; bgMusic.play(); } }
+    function updatePlayerCount(val) { if (val > 0 && pCount < 15) playSfx('pigout'); else if (val < 0 && pCount > 2) playSfx('oinker'); pCount = Math.min(Math.max(pCount + val, 2), 15); document.getElementById('pDisplay').innerText = pCount; drawSetup(); }
+    function showSetup() { initAudio(); playSfx('yeehaw'); document.getElementById('home-screen').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); document.getElementById('setup').classList.remove('hidden'); document.getElementById('game').classList.add('hidden'); document.getElementById('floatingSettings').classList.add('hidden'); drawSetup(); }
+    function drawSetup() { const container = document.getElementById('nameFields'); container.innerHTML = ''; for(let i=0; i<pCount; i++) { let swiper = characterImages.map((img, idx) => `<img src="${img}" class="char-opt ${idx === i ? 'selected' : ''}" onclick="selectChar(${i}, ${idx}, this)">`).join(''); container.innerHTML += `<div class="name-entry" id="p-row-${i}"><div class="emoji-swiper">${swiper}</div><input type="text" class="p-in" data-img="${characterImages[i]}" value="${pigNames[i % pigNames.length]}"></div>`; } }
     function selectChar(pIdx, eIdx, el) { playSfx('tan'); const row = document.getElementById(`p-row-${pIdx}`); row.querySelectorAll('.char-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); row.querySelector('.p-in').dataset.img = characterImages[eIdx]; }
-    
-    function initGame() { 
-        playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; inRedemption = false;
-        document.getElementById('redemptionIndicator').classList.add('hidden');
-        document.getElementById('setup').classList.add('hidden'); 
-        document.getElementById('game').classList.remove('hidden');
-        document.getElementById('floatingSettings').classList.remove('hidden'); 
-        document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [], eliminated: false }); }); 
-        refresh(); 
-    }
-
-    function replaySamePlayers() {
-        playSfx('yeehaw'); curIdx = 0; bank = 0; inRedemption = false;
-        players.forEach(p => { p.score = 0; p.history = []; p.eliminated = false; });
-        document.getElementById('winnerModal').classList.add('hidden');
-        document.getElementById('audioModal').classList.add('hidden');
-        document.getElementById('game').classList.remove('hidden');
-        document.getElementById('floatingSettings').classList.remove('hidden');
-        refresh();
-    }
-
-    function handleRoll(v, name) { 
-        if(name === 'PIG OUT') { playSfx('pigout'); if(inRedemption) players[curIdx].eliminated = true; players[curIdx].history.push(inRedemption ? "OUT" : 0); bank = 0; activeHog = null; document.getElementById('hogIndicator').innerText = ''; nextTurn(); return; } 
-        playSfx(name.startsWith('D-') ? 'pink' : 'tan');
-        let gain = v;
-        if(activeHog) {
-            const dv = activeHog.val * 2;
-            if(name === activeHog.guess) { players[activeHog.caller].score += dv; players[activeHog.caller].history.push(`+${dv}*`); gain -= dv; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${dv} pts!`); }
-            else { players[activeHog.caller].score -= dv; players[activeHog.caller].history.push(`-${dv}*`); gain += dv; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${dv} pts!`); }
-            activeHog = null; document.getElementById('hogIndicator').innerText = '';
-        }
-        bank += gain; if(!inRedemption && players[curIdx].score + bank >= 100) saveTurn(); refresh(); 
-    }
-
+    function initGame() { playSfx('yeehaw'); players = []; curIdx = 0; bank = 0; inRedemption = false; document.getElementById('redemptionIndicator').classList.add('hidden'); document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('floatingSettings').classList.remove('hidden'); document.querySelectorAll('.p-in').forEach(el => { players.push({ name: el.value || "Piggy", score: 0, img: el.dataset.img, history: [], eliminated: false }); }); refresh(); }
+    function replaySamePlayers() { playSfx('yeehaw'); curIdx = 0; bank = 0; inRedemption = false; players.forEach(p => { p.score = 0; p.history = []; p.eliminated = false; }); document.getElementById('winnerModal').classList.add('hidden'); document.getElementById('audioModal').classList.add('hidden'); document.getElementById('redemptionIndicator').classList.add('hidden'); document.getElementById('redemptionBtn').classList.remove('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('floatingSettings').classList.remove('hidden'); refresh(); }
+    function handleRoll(v, name) { if(name === 'PIG OUT') { playSfx('pigout'); if(inRedemption) players[curIdx].eliminated = true; players[curIdx].history.push(inRedemption ? "OUT" : 0); bank = 0; activeHog = null; document.getElementById('hogIndicator').innerText = ''; nextTurn(); return; } playSfx(name.startsWith('D-') ? 'pink' : 'tan'); let gain = v; if(activeHog) { const dv = activeHog.val * 2; if(name === activeHog.guess) { players[activeHog.caller].score += dv; players[activeHog.caller].history.push(`+${dv}*`); gain -= dv; showHogResult("SUCCESS!", `${players[activeHog.caller].name} wins ${dv} pts!`); } else { players[activeHog.caller].score -= dv; players[activeHog.caller].history.push(`-${dv}*`); gain += dv; showHogResult("FAILED!", `${players[activeHog.caller].name} loses ${dv} pts!`); } activeHog = null; document.getElementById('hogIndicator').innerText = ''; } bank += gain; if(!inRedemption && players[curIdx].score + bank >= 100) saveTurn(); refresh(); }
     function saveTurn() { playSfx('save'); players[curIdx].score += bank; players[curIdx].history.push(bank); if(!inRedemption && players[curIdx].score >= 100) { triggerWin(); return; } bank = 0; nextTurn(); }
     function startRedemption() { inRedemption = true; document.getElementById('winnerModal').classList.add('hidden'); document.getElementById('redemptionIndicator').classList.remove('hidden'); document.getElementById('redemptionBtn').classList.add('hidden'); bank = 0; const leaderIdx = players.indexOf(players.reduce((a, b) => a.score > b.score ? a : b)); curIdx = (leaderIdx + 1) % players.length; refresh(); }
-    
-    function triggerWin() {
-        playSfx('yeehaw'); const active = players.filter(p => !p.eliminated);
-        const winner = active.length > 0 ? active.reduce((a, b) => a.score > b.score ? a : b) : players[0];
-        document.getElementById('winHeader').innerText = inRedemption ? "REDEMPTION WINNER!" : "YEEHAW!";
-        document.getElementById('winnerName').innerText = winner.name;
-        document.getElementById('winnerImgContainer').innerHTML = `<img src="${winner.img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`;
-        const head = document.getElementById('tableHead'), body = document.getElementById('tableBody'), foot = document.getElementById('tableFoot');
-        head.innerHTML = '<tr><th>Round</th>' + players.map(p => `<th><img src="${p.img}" style="width:20px;"><br>${p.name}</th>`).join('') + '</tr>';
-        const maxR = Math.max(...players.map(p => p.history.length)); body.innerHTML = '';
-        for (let r = 0; r < maxR; r++) {
-            let row = `<tr><td>${r + 1}</td>`; players.forEach(p => { row += `<td>${p.history[r] !== undefined ? p.history[r] : '-'}</td>`; }); body.innerHTML += row + '</tr>';
-        }
-        foot.innerHTML = `<tr class="total-row"><td>Total</td>${players.map(p => `<td>${p.score}</td>`).join('')}</tr>`;
-        document.getElementById('winnerModal').classList.remove('hidden');
-    }
-
+    function triggerWin() { playSfx('yeehaw'); const active = players.filter(p => !p.eliminated); const winner = active.length > 0 ? active.reduce((a, b) => a.score > b.score ? a : b) : players[0]; document.getElementById('winHeader').innerText = inRedemption ? "REDEMPTION WINNER!" : "YEEHAW!"; document.getElementById('winnerName').innerText = winner.name; document.getElementById('winnerImgContainer').innerHTML = `<img src="${winner.img}" style="width:120px; height:120px; object-fit:contain; border:5px solid var(--star-yellow); border-radius:25px; margin-bottom:10px;">`; const head = document.getElementById('tableHead'), body = document.getElementById('tableBody'), foot = document.getElementById('tableFoot'); head.innerHTML = '<tr><th>Round</th>' + players.map(p => `<th><img src="${p.img}" style="width:20px;"><br>${p.name}</th>`).join('') + '</tr>'; const maxR = Math.max(...players.map(p => p.history.length)); body.innerHTML = ''; for (let r = 0; r < maxR; r++) { let row = `<tr><td>${r + 1}</td>`; players.forEach(p => { row += `<td>${p.history[r] !== undefined ? p.history[r] : '-'}</td>`; }); body.innerHTML += row + '</tr>'; } foot.innerHTML = `<tr class="total-row"><td>Total</td>${players.map(p => `<td>${p.score}</td>`).join('')}</tr>`; document.getElementById('winnerModal').classList.remove('hidden'); }
     function playAgain() { playSfx('yeehaw'); location.reload(); }
     function nextTurn() { let sIdx = curIdx; do { curIdx = (curIdx + 1) % players.length; } while (players[curIdx].eliminated && players.filter(p => !p.eliminated).length > 0); if(inRedemption && players.filter(p => !p.eliminated).length === 1) { triggerWin(); return; } refresh(); }
-    
-    function refresh() {
-        document.getElementById('bank').innerText = bank;
-        document.getElementById('projectedTotal').innerText = players[curIdx].score + bank;
-        document.getElementById('activeImgContainer').innerHTML = `<img src="${players[curIdx].img}" class="active-char-img">`;
-        document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn";
-        if(inRedemption) {
-            const maxS = Math.max(...players.map(p => p.score));
-            document.getElementById('saveBtn').disabled = (players[curIdx].score + bank <= maxS);
-        } else { document.getElementById('saveBtn').disabled = false; }
-        const sb = document.getElementById('sb'); sb.innerHTML = '';
-        players.forEach((p, i) => { 
-            const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''} ${p.eliminated ? 'hidden' : ''}`; 
-            card.innerHTML = `<div style="font-size:0.5rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1rem;">${p.score}</div>`; sb.appendChild(card); 
-        });
-        // Scoreboard centering fix
-        sb.style.justifyContent = (players.length <= 4) ? 'center' : 'flex-start';
-    }
-
-    function openHogCall() {
-        playSfx('hog'); const pList = document.getElementById('hogPlayerSelect'); pList.innerHTML = ''; let count = 0;
-        players.forEach((p, i) => { if(i !== curIdx && p.score >= 20 && !p.eliminated) {
-            pList.innerHTML += `<div class="score-card" onclick="selectHogP(${i})" id="hpc${i}" style="cursor:pointer; height:80px;"><div style="font-size:0.5rem;">${p.name}</div><img src="${p.img}" class="score-char-img"></div>`; count++;
-        }});
-        if(count === 0) return alert("No opponents with 20+ pts!");
-        const gList = document.getElementById('hogGuessGrid'); gList.innerHTML = '';
-        poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" style="font-size:0.7rem;" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`);
-        document.getElementById('hogModal').classList.remove('hidden'); activeHog = { caller: null, guess: null, val: 0 };
-    }
+    function refresh() { document.getElementById('bank').innerText = bank; document.getElementById('projectedTotal').innerText = players[curIdx].score + bank; document.getElementById('activeImgContainer').innerHTML = `<img src="${players[curIdx].img}" class="active-char-img">`; document.getElementById('activeTitle').innerText = players[curIdx].name + "'s Turn"; if(inRedemption) { const maxS = Math.max(...players.map(p => p.score)); document.getElementById('saveBtn').disabled = (players[curIdx].score + bank <= maxS); } else { document.getElementById('saveBtn').disabled = false; } const sb = document.getElementById('sb'); sb.innerHTML = ''; players.forEach((p, i) => { const card = document.createElement('div'); card.className = `score-card ${i === curIdx ? 'active-card' : ''} ${p.eliminated ? 'hidden' : ''}`; card.innerHTML = `<div style="font-size:0.5rem; font-weight:700;">${p.name}</div><img src="${p.img}" class="score-char-img"><div style="font-family:'Fredoka One'; font-size:1rem;">${p.score}</div>`; sb.appendChild(card); }); }
+    function openHogCall() { playSfx('hog'); const pList = document.getElementById('hogPlayerSelect'); pList.innerHTML = ''; let count = 0; players.forEach((p, i) => { if(i !== curIdx && p.score >= 20 && !p.eliminated) { pList.innerHTML += `<div class="score-card" onclick="selectHogP(${i})" id="hpc${i}" style="cursor:pointer; height:80px;"><div style="font-size:0.5rem;">${p.name}</div><img src="${p.img}" class="score-char-img"></div>`; count++; }}); if(count === 0) return alert("No opponents with 20+ pts!"); const gList = document.getElementById('hogGuessGrid'); gList.innerHTML = ''; poses.forEach(p => gList.innerHTML += `<button class="roll-btn btn-pts" style="font-size:0.7rem;" onclick="setHogGuess('${p.n}', ${p.v})">${p.n}</button>`); document.getElementById('hogModal').classList.remove('hidden'); activeHog = { caller: null, guess: null, val: 0 }; }
     function selectHogP(i) { playSfx('tan'); document.querySelectorAll('#hogPlayerSelect .score-card').forEach(o => o.classList.remove('active-card')); document.getElementById('hpc' + i).classList.add('active-card'); activeHog.caller = i; }
     function setHogGuess(n, v) { if(activeHog.caller === null) return alert("Select challenger!"); playSfx('tan'); activeHog.guess = n; activeHog.val = v; document.getElementById('hogModal').classList.add('hidden'); document.getElementById('hogIndicator').innerText = `📢 ${players[activeHog.caller].name} guessed ${n}!`; }
     function closeHogCall() { activeHog = null; document.getElementById('hogIndicator').innerText = ''; document.getElementById('hogModal').classList.add('hidden'); }
